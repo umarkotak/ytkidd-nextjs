@@ -15,8 +15,11 @@ export default function Navbar() {
       </div>
 
       <div className="w-1/2">
-        <div className="relative">
-          <input type="text" placeholder="Search" className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-300 text-gray-600 placeholder-gray-400" />
+        <div className="relative flex items-center">
+          <input type="text" placeholder="Search" className="w-full border border-gray-400 rounded-full px-4 py-2 focus:outline-none focus:ring focus:border-blue-300 text-gray-600 placeholder-gray-400" />
+          <button className="ml-[-55px] py-2 px-4 hover:bg-gray-100 rounded-full">
+            <i class="fa-solid fa-magnifying-glass" />
+          </button>
         </div>
       </div>
 

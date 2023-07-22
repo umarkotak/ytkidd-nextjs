@@ -47,6 +47,9 @@ export default function Sidebar() {
         <span className="px-5 text-xs" onClick={()=>console.log(activeMenu)}>
           A youtube content library curated by human for kids
         </span>
+        <span className="hidden">
+          tailwind class trigger
+        </span>
       </div>
     </div>
   )

@@ -9,8 +9,9 @@ export default function Watch() {
   const [videoPlayerHeight, setVideoPlayerHeight] = useState(360)
 
   useEffect(() => {
-    if (!videoPlayerDivRef.current) return;
+    if (!videoPlayerDivRef.current) return
     const resizeObserver = new ResizeObserver(() => {
+      if (!videoPlayerDivRef.current) return
       var res = Math.floor(videoPlayerDivRef.current.offsetWidth / (16 / 9))
       setVideoPlayerHeight(res)
     });
@@ -21,15 +22,18 @@ export default function Watch() {
   return (
     <main className='ml-2 mr-4'>
       <div className="flex">
-        <div ref={videoPlayerDivRef} id="video-content" className="w-full mr-4">
-          <YouTube id="video-player" videoId="CstEyd_-Whk" opts={{
-            height: `${videoPlayerHeight}`,
-            width: '100%',
-            playerVars: {
-              // https://developers.google.com/youtube/player_parameters
-              autoplay: 0,
-            },
-          }} />
+        <div className='w-full mr-4'>
+          <div ref={videoPlayerDivRef} id="video-content" className="w-full">
+            <YouTube id="video-player" videoId="CstEyd_-Whk" opts={{
+              height: `${videoPlayerHeight}`,
+              width: '100%',
+              playerVars: {
+                // https://developers.google.com/youtube/player_parameters
+                autoplay: 1,
+              },
+            }} />
+          </div>
+
         </div>
         <div id="suggestion-content" className="min-w-[402px]">
           {[1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2].map((v)=>(
