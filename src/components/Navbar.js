@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 export default function Navbar() {
   return (
     <nav className="z-5 fixed top-0 border-b-2 border-gray-200 w-full bg-white px-4 flex justify-between items-center h-16">
@@ -10,7 +12,9 @@ export default function Navbar() {
           </button>
         </div>
         <div>
-          <h1 className="text-xl font-bold text-gray-800">YT Kidd</h1>
+          <Link href="/">
+            <h1 className="text-xl font-bold text-gray-800">YT Kidd</h1>
+          </Link>
         </div>
       </div>
 
@@ -18,7 +22,7 @@ export default function Navbar() {
         <div className="relative flex items-center">
           <input type="text" placeholder="Search" className="w-full border border-gray-400 rounded-full px-4 py-2 focus:outline-none focus:ring focus:border-blue-300 text-gray-600 placeholder-gray-400" />
           <button className="ml-[-55px] py-2 px-4 hover:bg-gray-100 rounded-full">
-            <i class="fa-solid fa-magnifying-glass" />
+            <i className="fa-solid fa-magnifying-glass" />
           </button>
         </div>
       </div>

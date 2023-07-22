@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         <div className='mt-[64px] z-1 flex'>
           <Sidebar/>
 
-          <div id="content-section" className='ml-[200px] pb-[100px] p-4 overflow-auto w-full'>
+          <div id="content-section" className='ml-[200px] w-full'>
             {children}
           </div>
         </div>
