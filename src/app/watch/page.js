@@ -1,10 +1,11 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import YouTube from 'react-youtube'
 
 export default function Watch() {
-
+  const searchParams = useSearchParams()
 
   const [videoPlayerHeight, setVideoPlayerHeight] = useState(360)
   const [mobileMode, setMobileMode] = useState(true)
@@ -35,7 +36,6 @@ export default function Watch() {
   useEffect(() => {
     if (!videoPlayerDivRef.current) return
     const resizeObserver = new ResizeObserver(() => {
-      console.log("A")
       if (!videoPlayerDivRef.current) return
       var res = Math.floor(videoPlayerDivRef.current.offsetWidth / (16 / 9))
       setVideoPlayerHeight(res)
@@ -49,7 +49,7 @@ export default function Watch() {
       <div className={`flex ${mobileMode ? "flex-col" : ""}`}>
         <div className='w-full mr-4 mb-4'>
           <div ref={videoPlayerDivRef} id="video-content" className={`w-full ${mobileMode ? "fixed z-1 top-16" : ""}`}>
-            <YouTube id="video-player" videoId="CstEyd_-Whk" opts={{
+            <YouTube id="video-player" videoId={searchParams.get('v')} opts={{
               height: `${videoPlayerHeight}`,
               width: '100%',
               playerVars: {
