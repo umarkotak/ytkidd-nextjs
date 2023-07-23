@@ -45,10 +45,10 @@ export default function Watch() {
   }, [])
 
   return (
-    <main className={`pb-[100px]`}>
+    <main className={`pb-[100px] ${mobileMode ? "" : "m-6"}`}>
       <div className={`flex ${mobileMode ? "flex-col" : ""}`}>
         <div className='w-full mr-4 mb-4'>
-          <div ref={videoPlayerDivRef} id="video-content" className="w-full">
+          <div ref={videoPlayerDivRef} id="video-content" className={`w-full ${mobileMode ? "fixed z-1 top-16" : ""}`}>
             <YouTube id="video-player" videoId="CstEyd_-Whk" opts={{
               height: `${videoPlayerHeight}`,
               width: '100%',
@@ -57,6 +57,26 @@ export default function Watch() {
                 autoplay: 1,
               },
             }} />
+          </div>
+          <div className={`${mobileMode ? "mt-[250px]" : "mt-4"}`}>
+            <span className="font-semibold text-2xl text-gray-900 leading-5">Some long title goes here and here and there somewhere...</span>
+          </div>
+          <div className='flex justify-between items-center mt-2'>
+            <div className='flex items-center'>
+              <img src="http://placekitten.com/300/300" alt="Avatar" className="h-10 w-10 rounded-full" />
+              <span className='text-lg font-semibold text-gray-800 ml-4'>yt kidd</span>
+            </div>
+            <div className='flex'>
+              <button className='py-1 px-3 rounded-full text-black bg-gray-200 hover:bg-gray-300'>
+                <i className="fa-solid fa-circle-arrow-up"></i> Upvote
+              </button>
+              <button className='py-1 px-3 rounded-full text-black bg-gray-200 hover:bg-gray-300 ml-2'>
+                <i className="fa-solid fa-circle-arrow-down"></i> Downvote
+              </button>
+            </div>
+          </div>
+          <div className='p-4 bg-gray-200 mt-4 rounded-lg'>
+            <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> 0x viewed﹒<i className="fa-solid fa-clock"/> 10 mins watched</span>
           </div>
         </div>
         <div id="suggestion-content" className={`${mobileMode ? "" : "min-w-[402px]"}`}>
@@ -71,8 +91,8 @@ export default function Watch() {
               </div>
               <div className='w-full ml-2 flex flex-col'>
                 <span className="font-medium text-md text-gray-900 leading-5">Some long title goes here and here and there somewhere...</span>
-                <span className="text-sm">yt kidd </span>
-                <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> 0x viewed﹒<i className="fa-solid fa-clock"/> 10 mins watched</span>
+                <span className="text-sm text-gray-800">yt kidd </span>
+                <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> 0x viewed﹒<i className="fa-solid fa-clock"/> 10 mins watched</span>
               </div>
             </div>
           ))}
