@@ -3,24 +3,22 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
+import YtVideo from '@/models/YtVideo'
+import Utils from '@/models/Utils'
+
 export default function Home() {
 
   const [videoList, setVideoList] = useState([])
 
   useEffect(() => {
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
-      var arr = json
-      setVideoList(arr)
+      var arr = json.map((v) => {
+        var ytVideo = new YtVideo(v)
+        return ytVideo
+      })
+      setVideoList(Utils.ShuffleArray(arr))
     })
   }, [])
-
-  function GetViewedCount(oneVideo) {
-    return 0
-  }
-
-  function GetWatchedDuration(oneVideo) {
-    return 0
-  }
 
   return (
     <main className='pb-[100px] p-4'>
@@ -40,9 +38,9 @@ export default function Home() {
               </div>
               <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}>
                 <div className="flex flex-col w-full ml-1 pr-2">
-                  <span className="font-medium text-md text-gray-900 break-words">{oneVideo.video_title}</span>
+                  <span className="font-medium text-md text-gray-900 break-words">{oneVideo.shorted_video_title}</span>
                   <span className="text-sm break-words">{oneVideo.creator_name}</span>
-                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> {GetViewedCount(oneVideo)}x viewed﹒<i className="fa-solid fa-clock"/> {GetWatchedDuration(oneVideo)} mins watched</span>
+                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration()} mins watched</span>
                 </div>
               </Link>
             </div>

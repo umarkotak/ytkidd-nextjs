@@ -72,20 +72,10 @@ type (
 func main() {
 	fmt.Printf("START SCRAPING YOUTUBE DATA!\n")
 
-	//     params << "pageTokenq=#{@nextPageToken}" if @nextPageToken
-	//     url_builder = host + params.join('&')
-
-	//     target_url = URI.parse(url_builder)
-	//     response = Net::HTTP.get(target_url)
-	//     response_parsed = JSON.parse(response, symbolize_names: true)
-	//     nextPageToken = response_parsed[:nextPageToken]
-
-	channelId := "UCTu0mh8zi8kb5V_9E1y2FCQ"
-	channelImageUrl := "Shimanjiro"
+	channelId := "UCVzLLZkDuFGAE2BGdBuBNBg"
+	channelImageUrl := "https://yt3.ggpht.com/ytc/AOPolaTOW1xJWre86fCwse8DQMYRGGY71y4HQHstXzXNBA=s88-c-k-c0x00ffffff-no-rj"
 	stringTags := "kids,family"
-
-	// videoList := []VideoData{}
-	// nextPageToken := ""
+	nextPageToken := "CDIQAA"
 
 	youtubeApi := "https://www.googleapis.com/youtube/v3/search?"
 	params := []string{
@@ -94,6 +84,10 @@ func main() {
 		"part=snippet,id",
 		"order=date",
 		"maxResults=50",
+	}
+
+	if nextPageToken != "" {
+		params = append(params, fmt.Sprintf("pageTokenq=%v", nextPageToken))
 	}
 
 	finalUrl := fmt.Sprintf("%v%v", youtubeApi, strings.Join(params, "&"))
@@ -139,6 +133,8 @@ func main() {
 		return
 	}
 
+	ytIdMap := map[string]bool{}
+
 	dbVid := []VideoData{}
 	err = json.Unmarshal(byteValue, &dbVid)
 	if err != nil {
@@ -146,7 +142,15 @@ func main() {
 		return
 	}
 
+	for _, oneDbVid := range dbVid {
+		ytIdMap[oneDbVid.VideoID] = true
+	}
+
 	for _, oneYoutubeVid := range youtubeResponse.Items {
+		if ytIdMap[oneYoutubeVid.ID.VideoID] {
+			continue
+		}
+
 		dbVid = append(dbVid, VideoData{
 			YtkiddID:        fmt.Sprintf("%v", len(dbVid)),
 			VideoID:         oneYoutubeVid.ID.VideoID,
@@ -156,6 +160,7 @@ func main() {
 			CreatorImageURL: channelImageUrl,
 			StringTags:      stringTags,
 		})
+		ytIdMap[oneYoutubeVid.ID.VideoID] = true
 	}
 
 	resByte, err := json.MarshalIndent(dbVid, "", "    ")
@@ -169,4 +174,6 @@ func main() {
 		logrus.Error(err)
 		return
 	}
+
+	logrus.Infof("Next page token: %v\n", youtubeResponse.NextPageToken)
 }
