@@ -6,19 +6,45 @@ import { useState, useEffect } from 'react'
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
 
-export default function Home() {
+var limit = 40
+var allVideo = []
 
+export default function Home() {
   const [videoList, setVideoList] = useState([])
 
   useEffect(() => {
+    limit = 40
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
       var arr = json.map((v) => {
         var ytVideo = new YtVideo(v)
         return ytVideo
       })
-      setVideoList(Utils.ShuffleArray(arr))
+      allVideo = Utils.ShuffleArray(arr)
+      setVideoList(allVideo.slice(0, limit))
     })
   }, [])
+
+  const [triggerNextPage, setTriggerNextPage] = useState(0)
+  const handleScroll = () => {
+    var position = window.pageYOffset
+    var maxPosition = document.documentElement.scrollHeight - document.documentElement.clientHeight
+
+    if (maxPosition-position <= 1200) {
+      setTriggerNextPage(position)
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+  useEffect(() => {
+    limit += limit
+    const nextVideos = allVideo.slice(0, limit)
+    setVideoList(nextVideos)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [triggerNextPage])
 
   return (
     <main className='pb-[100px] p-4'>

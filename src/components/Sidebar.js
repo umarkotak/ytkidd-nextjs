@@ -59,6 +59,11 @@ export default function Sidebar() {
             <i className="fa-solid fa-house w-[34px]"/><span className="">Home</span>
           </div>
         </Link>
+        <Link href="/channels">
+          <div className={`px-5 py-2 ${pathname === "/channels" ? "bg-gray-100" : "bg-white"} hover:bg-gray-200`}>
+            <i className="fa-solid fa-user-check w-[34px]"/><span className="">Channels</span>
+          </div>
+        </Link>
         <Link href="/stats">
           <div className={`px-5 py-2 ${pathname.startsWith("/stats") ? "bg-gray-100" : "bg-white"} hover:bg-gray-200`}>
             <i className="fa-solid fa-chart-simple w-[34px]"/><span className="">Stats</span>

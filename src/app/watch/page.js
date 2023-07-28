@@ -8,6 +8,9 @@ import Link from 'next/link'
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
 
+var limit = 40
+var allVideoShuffled = []
+
 export default function Watch() {
   const searchParams = useSearchParams()
 
@@ -50,18 +53,52 @@ export default function Watch() {
 
   const [videoList, setVideoList] = useState([])
   const [selectedVideo, setSelectedVideo] = useState(new YtVideo({}))
+  const [allVideo, setAllVideo] = useState([])
 
   useEffect(() => {
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
-      var arr = json.map((v) => {
+      var tmpAllVideo = json.map((v) => {
         var ytVideo = new YtVideo(v)
         return ytVideo
       })
-      var selectedVidObjs = new YtVideo(arr[parseInt(searchParams.get('ytkidd_id'))])
+
+      setAllVideo(tmpAllVideo)
+
+      allVideoShuffled = Utils.ShuffleArray(tmpAllVideo)
+      setVideoList(allVideoShuffled.slice(0, limit))
+
+      var selectedVidObjs = new YtVideo(tmpAllVideo[parseInt(searchParams.get('ytkidd_id'))])
       setSelectedVideo(selectedVidObjs)
-      setVideoList(Utils.ShuffleArray(arr))
     })
   }, [])
+
+  useEffect(() => {
+    limit = 40
+    allVideoShuffled = [...Utils.ShuffleArray(allVideo)]
+    setVideoList(allVideoShuffled.slice(0, limit))
+  }, [searchParams])
+
+  const [triggerNextPage, setTriggerNextPage] = useState(0)
+  const handleScroll = () => {
+    var position = window.pageYOffset
+    var maxPosition = document.documentElement.scrollHeight - document.documentElement.clientHeight
+
+    if (maxPosition-position <= 1200) {
+      setTriggerNextPage(position)
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+  useEffect(() => {
+    limit += limit
+    const nextVideos = allVideoShuffled.slice(0, limit)
+    setVideoList(nextVideos)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [triggerNextPage])
 
   return (
     <main className={`pb-[100px] ${mobileMode ? "" : "m-6"}`}>
