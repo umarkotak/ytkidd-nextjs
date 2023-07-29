@@ -10,6 +10,7 @@ export default class YtVideo {
     this.string_tags = ytVideo.string_tags
 
     this.shorted_video_title = this.ShortVideoTitle(ytVideo.video_title)
+    this.video_stat_key = `YTKIDD:VIDEO_STAT:${ytVideo.video_id}`
   }
 
   ShortVideoTitle(title) {
@@ -19,11 +20,43 @@ export default class YtVideo {
     return `${title}`
   }
 
+  IncreaseWatchDuration(videoID, durationSecond) {
+    var key = `YTKIDD:VIDEO_STAT:${videoID}`
+    var videoStat = this.GetLocalVideoStat(key)
+    videoStat.total_watch_duration += durationSecond
+    localStorage.setItem(key, JSON.stringify(videoStat))
+    console.log(key, durationSecond)
+  }
+
+  GetLocalVideoStat(key) {
+    var videoStat = {
+      "total_watch_duration": 0,
+      "view_count": 0,
+      "latest_watched_at_unix": 0
+    }
+
+    if (localStorage.getItem(key)) {
+      videoStat = JSON.parse(localStorage.getItem(key))
+    } else {
+      localStorage.setItem(key, JSON.stringify(videoStat))
+    }
+
+    return videoStat
+  }
+
   GetViewedCount() {
     return 0
   }
 
-  GetWatchedDuration() {
-    return 0
+  GetWatchedDuration(videoID) {
+    var selectedVideoID = this.video_id
+    if (videoID !== "") {
+      selectedVideoID = videoID
+    }
+
+    var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
+    if (!localStorage.getItem(key)) {return}
+    var videoStat = JSON.parse(localStorage.getItem(key))
+    return Math.floor(videoStat.total_watch_duration/60)
   }
 }

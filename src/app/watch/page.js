@@ -10,6 +10,8 @@ import Utils from '@/models/Utils'
 
 var limit = 40
 var allVideoShuffled = []
+var initialTime = Math.floor(Date.now() / 1000)
+var totalElapsedSeconds = 0
 
 export default function Watch() {
   const searchParams = useSearchParams()
@@ -64,12 +66,17 @@ export default function Watch() {
 
       setAllVideo(tmpAllVideo)
 
-      allVideoShuffled = Utils.ShuffleArray(tmpAllVideo)
-      setVideoList(allVideoShuffled.slice(0, limit))
-
       var selectedVidObjs = new YtVideo(tmpAllVideo[parseInt(searchParams.get('ytkidd_id'))])
       setSelectedVideo(selectedVidObjs)
+
+      allVideoShuffled = Utils.ShuffleArray(tmpAllVideo)
+      setVideoList(allVideoShuffled.slice(0, limit))
     })
+
+    initialTime = Math.floor(Date.now() / 1000)
+    totalElapsedSeconds = 0
+
+    ticker()
   }, [])
 
   useEffect(() => {
@@ -99,6 +106,23 @@ export default function Watch() {
     setVideoList(nextVideos)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerNextPage])
+
+  async function ticker() {
+    if (!searchParams.get('v')) { return }
+
+    if (window.location.pathname !== "/watch") { return }
+
+    var currentTime = Math.floor(Date.now() / 1000)
+    var elapsedSeconds = currentTime - initialTime
+    totalElapsedSeconds += elapsedSeconds
+
+    initialTime = currentTime
+
+    selectedVideo.IncreaseWatchDuration(searchParams.get('v'),totalElapsedSeconds)
+
+    await Utils.Sleep(5*1000)
+    ticker()
+  }
 
   return (
     <main className={`pb-[100px] ${mobileMode ? "" : "m-6"}`}>
@@ -132,7 +156,11 @@ export default function Watch() {
             </div>
           </div>
           <div className='p-4 bg-gray-200 mt-4 rounded-lg'>
-            <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {selectedVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {selectedVideo.GetWatchedDuration()} mins watched</span>
+            <div>
+            </div>
+            <div>
+              <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {selectedVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {selectedVideo.GetWatchedDuration(searchParams.get('v'))} mins watched</span>
+            </div>
           </div>
         </div>
         <div id="suggestion-content" className={`${mobileMode ? "" : "min-w-[402px]"}`}>

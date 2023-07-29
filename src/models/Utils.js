@@ -16,6 +16,10 @@ class UtilsClass {
 
     return array;
   }
+
+  Sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
 }
 
 var Utils = new UtilsClass()
