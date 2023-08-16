@@ -80,7 +80,7 @@ export default function Watch() {
   }, [])
 
   useEffect(() => {
-    limit = 40
+    limit = 20
     allVideoShuffled = [...Utils.ShuffleArray(allVideo)]
     setVideoList(allVideoShuffled.slice(0, limit))
   }, [searchParams])
@@ -165,8 +165,8 @@ export default function Watch() {
         </div>
         <div id="suggestion-content" className={`${mobileMode ? "" : "min-w-[402px]"}`}>
           {videoList.map((oneVideo)=>(
-            <div className='mb-4 flex' key={Math.random() * 100000}>
-              <div className='min-w-[168px] h-[94px]'>
+            <div className='mb-5 flex' key={`${oneVideo.ytkidd_id}-${Math.random() * 100000}`}>
+              <div className='min-w-[168px] max-w-[168px] h-[94px]'>
                 <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}>
                   <img
                     className={`${mobileMode ? "" : "rounded-xl"} shadow-md w-full h-full`}
@@ -178,7 +178,12 @@ export default function Watch() {
               <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}>
                 <div className='w-full ml-2 flex flex-col'>
                   <span className="font-medium text-md text-gray-900 leading-5">{oneVideo.shorted_video_title}</span>
-                  <span className="text-sm text-gray-800">{oneVideo.creator_name}</span>
+                  <span className="flex text-sm text-gray-800 mt-1 items-center">
+                    <Link href="/watch" className="mr-2">
+                      <img src={oneVideo.creator_image_url} alt="Avatar" className="h-7 w-7 rounded-full" />
+                    </Link>
+                    {oneVideo.creator_name}
+                  </span>
                   <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration()} mins watched</span>
                 </div>
               </Link>

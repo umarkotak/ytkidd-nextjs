@@ -14,7 +14,7 @@ export default class YtVideo {
   }
 
   ShortVideoTitle(title) {
-    if (`${title}`.length > 63) {
+    if (`${title}`.length > 55) {
       return `${`${title}`.slice(0, 60)}...`
     }
     return `${title}`
@@ -55,7 +55,7 @@ export default class YtVideo {
     }
 
     var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
-    if (!localStorage.getItem(key)) {return}
+    if (!localStorage.getItem(key)) {return 0}
     var videoStat = JSON.parse(localStorage.getItem(key))
     return Math.floor(videoStat.total_watch_duration/60)
   }
