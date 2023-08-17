@@ -35,6 +35,8 @@ export default class YtVideo {
       "latest_watched_at_unix": 0
     }
 
+    if (!localStorage) {return 0}
+
     if (localStorage.getItem(key)) {
       videoStat = JSON.parse(localStorage.getItem(key))
     } else {
@@ -53,6 +55,8 @@ export default class YtVideo {
     if (videoID !== "") {
       selectedVideoID = videoID
     }
+
+    if (!localStorage) {return 0}
 
     var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
     if (!localStorage.getItem(key)) {return 0}

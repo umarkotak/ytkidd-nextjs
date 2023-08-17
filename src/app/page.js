@@ -6,14 +6,14 @@ import { useState, useEffect } from 'react'
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
 
-var limit = 40
+var limit = 20
 var allVideo = []
 
 export default function Home() {
   const [videoList, setVideoList] = useState([])
 
   useEffect(() => {
-    limit = 40
+    limit = 20
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
       var arr = json.map((v) => {
         var ytVideo = new YtVideo(v)

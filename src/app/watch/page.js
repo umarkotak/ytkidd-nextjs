@@ -8,7 +8,7 @@ import Link from 'next/link'
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
 
-var limit = 40
+var limit = 20
 var allVideoShuffled = []
 var initialTime = Math.floor(Date.now() / 1000)
 var totalElapsedSeconds = 0
@@ -179,10 +179,10 @@ export default function Watch() {
                 <div className='w-full ml-2 flex flex-col'>
                   <span className="font-medium text-md text-gray-900 leading-5">{oneVideo.shorted_video_title}</span>
                   <span className="flex text-sm text-gray-800 mt-1 items-center">
-                    <Link href="/watch" className="mr-2">
-                      <img src={oneVideo.creator_image_url} alt="Avatar" className="h-7 w-7 rounded-full" />
+                    <Link href="/watch" className="flex-none mr-2">
+                      <img src={oneVideo.creator_image_url} alt="Avatar" className="w-full max-h-7 min-h-7 max-w-7 min-w-7 rounded-full" />
                     </Link>
-                    {oneVideo.creator_name}
+                    <span className='flex-auto'>{oneVideo.creator_name}</span>
                   </span>
                   <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration()} mins watched</span>
                 </div>
