@@ -66,11 +66,21 @@ export default function Watch() {
 
       setAllVideo(tmpAllVideo)
 
-      var selectedVidObjs = new YtVideo(tmpAllVideo[parseInt(searchParams.get('ytkidd_id'))])
-      setSelectedVideo(selectedVidObjs)
-
       allVideoShuffled = Utils.ShuffleArray(tmpAllVideo)
       setVideoList(allVideoShuffled.slice(0, limit))
+
+      if (!searchParams.get('ytkidd_id')) {
+        return
+      }
+
+      var selectedVidObj
+      allVideoShuffled.forEach(tmpOneVideo => {
+        if (searchParams.get('ytkidd_id') === tmpOneVideo.ytkidd_id) {
+          selectedVidObj = new YtVideo(tmpOneVideo)
+        }
+      })
+
+      setSelectedVideo(selectedVidObj)
     })
 
     initialTime = Math.floor(Date.now() / 1000)
@@ -83,6 +93,15 @@ export default function Watch() {
     limit = 20
     allVideoShuffled = [...Utils.ShuffleArray(allVideo)]
     setVideoList(allVideoShuffled.slice(0, limit))
+
+    var selectedVidObj
+    allVideoShuffled.forEach(tmpOneVideo => {
+      if (searchParams.get('ytkidd_id') === tmpOneVideo.ytkidd_id) {
+        selectedVidObj = new YtVideo(tmpOneVideo)
+      }
+    })
+
+    setSelectedVideo(selectedVidObj)
   }, [searchParams])
 
   const [triggerNextPage, setTriggerNextPage] = useState(0)
@@ -143,7 +162,9 @@ export default function Watch() {
           </div>
           <div className='flex justify-between items-center mt-2'>
             <div className='flex items-center'>
-              <img src={selectedVideo.creator_image_url} alt="Avatar" className="h-10 w-10 rounded-full" />
+              <Link href={`/channel?channel_id=${selectedVideo.channel_id}`}>
+                <img src={selectedVideo.creator_image_url} alt="Avatar" className="h-10 w-10 rounded-full" />
+              </Link>
               <span className='text-lg font-semibold text-gray-800 ml-4'>{selectedVideo.creator_name}</span>
             </div>
             <div className='flex'>
@@ -175,11 +196,11 @@ export default function Watch() {
                   />
                 </Link>
               </div>
-              <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}>
+              <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`} className='pr-2'>
                 <div className='w-full ml-2 flex flex-col'>
                   <span className="font-medium text-md text-gray-900 leading-5">{oneVideo.shorted_video_title}</span>
                   <span className="flex text-sm text-gray-800 mt-1 items-center">
-                    <Link href="/watch" className="flex-none mr-2">
+                    <Link href={`/channel?channel_id=${oneVideo.channel_id}`} className="flex-none mr-2">
                       <img src={oneVideo.creator_image_url} alt="Avatar" className="w-full max-h-7 min-h-7 max-w-7 min-w-7 rounded-full" />
                     </Link>
                     <span className='flex-auto'>{oneVideo.creator_name}</span>
@@ -193,94 +214,4 @@ export default function Watch() {
       </div>
     </main>
   )
-
-  function RenderMobileMode() {
-    return(
-      <main className={`pb-[100px]`}>
-        <div className={`flex flex-col`}>
-          <div className='w-full mr-4 mb-4'>
-            <RenderVideoPlayer />
-          </div>
-          <div id="suggestion-content" className="min-w-[402px]">
-            {[1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2].map((v)=>(
-              <div className='mb-4 flex' key={Math.random() * 100000}>
-                <div className='min-w-[168px] h-[94px]'>
-                  <img className="rounded-xl shadow-md w-full h-full" src="https://i.ytimg.com/vi/cl2P-B7T3Xo/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDhtsv7HeAkn4kwLhnnXdkYm4XtBw" alt="thumb" />
-                </div>
-                <div className='w-full ml-2 flex flex-col'>
-                  <span className="font-medium text-md text-gray-900 leading-5">Some long title goes here and here and there somewhere...</span>
-                  <span className="text-sm">yt kidd </span>
-                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> 0x viewed﹒<i className="fa-solid fa-clock"/> 10 mins watched</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    )
-  }
-
-  function RenderDesktopMode() {
-    return(
-      <main className={`pb-[100px] p-4 mx-2"`}>
-        <div className={`flex`}>
-          <div className='w-full mr-4 mb-4'>
-            <div ref={videoPlayerDivRef} id="video-content" className="w-full">
-              <YouTube id="video-player" videoId="CstEyd_-Whk" opts={{
-                height: `${videoPlayerHeight}`,
-                width: '100%',
-                playerVars: {
-                  // https://developers.google.com/youtube/player_parameters
-                  autoplay: 1,
-                },
-              }} />
-            </div>
-          </div>
-          <div id="suggestion-content" className="min-w-[402px]">
-            {[1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2].map((v)=>(
-              <div className='mb-4 flex' key={Math.random() * 100000}>
-                <div className='min-w-[168px] h-[94px]'>
-                  <img className="rounded-xl shadow-md w-full h-full" src="https://i.ytimg.com/vi/cl2P-B7T3Xo/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDhtsv7HeAkn4kwLhnnXdkYm4XtBw" alt="thumb" />
-                </div>
-                <div className='w-full ml-2 flex flex-col'>
-                  <span className="font-medium text-md text-gray-900 leading-5">Some long title goes here and here and there somewhere...</span>
-                  <span className="text-sm">yt kidd </span>
-                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> 0x viewed﹒<i className="fa-solid fa-clock"/> 10 mins watched</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    )
-  }
-
-  function RenderVideoPlayer() {
-    const videoPlayerDivRef = useRef()
-
-    useEffect(() => {
-      if (!videoPlayerDivRef.current) return
-      const resizeObserver = new ResizeObserver(() => {
-        console.log("A")
-        if (!videoPlayerDivRef.current) return
-        var res = Math.floor(videoPlayerDivRef.current.offsetWidth / (16 / 9))
-        setVideoPlayerHeight(res)
-      })
-      resizeObserver.observe(videoPlayerDivRef.current)
-      return () => resizeObserver.disconnect() // clean up
-    }, [])
-
-    return(
-      <div ref={videoPlayerDivRef} id="video-content" className="w-full">
-        <YouTube id="video-player" videoId="CstEyd_-Whk" opts={{
-          height: `${videoPlayerHeight}`,
-          width: '100%',
-          playerVars: {
-            // https://developers.google.com/youtube/player_parameters
-            autoplay: 1,
-          },
-        }} />
-      </div>
-    )
-  }
 }

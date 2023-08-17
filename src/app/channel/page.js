@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
@@ -10,7 +11,9 @@ var limit = 20
 var allVideo = []
 var allChannel = []
 
-export default function Home() {
+export default function Channel() {
+  const searchParams = useSearchParams()
+
   const [videoList, setVideoList] = useState([])
   const [channelList, setChannelList] = useState([])
 
@@ -20,6 +23,8 @@ export default function Home() {
       var arr = json.map((v) => {
         var ytVideo = new YtVideo(v)
         return ytVideo
+      }).filter((ytVideo) => {
+        return ytVideo.channel_id === searchParams.get("channel_id")
       })
       allVideo = Utils.ShuffleArray(arr)
       setVideoList(allVideo.slice(0, limit))
@@ -57,24 +62,6 @@ export default function Home() {
 
   return (
     <main className='pb-[100px] p-4'>
-      <div className='mb-4 flex overflow-x-auto w-full pb-4'>
-        {channelList.map((oneChannel, idx) => (
-          <>
-            <Link
-              href={`/channel?channel_id=${oneChannel.channel_id}`}
-              className='flex-shrink-0 py-2 pl-2 pr-3 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center mr-2'
-              key={oneChannel.channel_id}
-            >
-              <img
-                src={oneChannel.channel_image_url}
-                className='h-6 w-6 rounded-full mr-2'
-              />
-              <span className='text-sm'>{oneChannel.channel_name}</span>
-            </Link>
-          </>
-        ))}
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-8">
         {videoList.map((oneVideo)=>(
           <div key={oneVideo.ytkidd_id} className=''>

@@ -8,6 +8,7 @@ export default class YtVideo {
     this.creator_name = ytVideo.creator_name
     this.creator_image_url = ytVideo.creator_image_url
     this.string_tags = ytVideo.string_tags
+    this.channel_id = ytVideo.channel_id
 
     this.shorted_video_title = this.ShortVideoTitle(ytVideo.video_title)
     this.video_stat_key = `YTKIDD:VIDEO_STAT:${ytVideo.video_id}`
@@ -35,7 +36,7 @@ export default class YtVideo {
       "latest_watched_at_unix": 0
     }
 
-    if (!localStorage) {return 0}
+    if (typeof(localStorage) === "undefined") {return 0}
 
     if (localStorage.getItem(key)) {
       videoStat = JSON.parse(localStorage.getItem(key))
@@ -56,7 +57,7 @@ export default class YtVideo {
       selectedVideoID = videoID
     }
 
-    if (!localStorage) {return 0}
+    if (typeof(localStorage) === "undefined") {return 0}
 
     var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
     if (!localStorage.getItem(key)) {return 0}
