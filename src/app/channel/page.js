@@ -16,6 +16,7 @@ export default function Channel() {
 
   const [videoList, setVideoList] = useState([])
   const [channelList, setChannelList] = useState([])
+  const [selectedChannel, setSelectedChannel] = useState({})
 
   useEffect(() => {
     limit = 20
@@ -31,6 +32,9 @@ export default function Channel() {
     })
     fetch('/data/creator.json').then((response) => response.json()).then((json) => {
       var arr = json.map((v) => {
+        if (v.channel_id === searchParams.get("channel_id")) {
+          setSelectedChannel(v)
+        }
         return v
       })
       allChannel = Utils.ShuffleArray(arr)
@@ -62,6 +66,14 @@ export default function Channel() {
 
   return (
     <main className='pb-[100px] p-4'>
+      <div className='mb-10 flex'>
+        <div className='mr-6'>
+          <img className="w-24 h-24 rounded-full shadow-md w-full" src={selectedChannel.channel_image_url} alt="thumb" />
+        </div>
+        <div className='py-4'>
+          <span className='text-xl'>{selectedChannel.channel_name}</span>
+        </div>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-8">
         {videoList.map((oneVideo)=>(
           <div key={oneVideo.ytkidd_id} className=''>
@@ -80,7 +92,7 @@ export default function Channel() {
                 <div className="flex flex-col w-full ml-1 pr-2">
                   <span className="font-medium text-md text-gray-900 break-words">{oneVideo.shorted_video_title}</span>
                   <span className="text-sm break-words">{oneVideo.creator_name}</span>
-                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration()} mins watched</span>
+                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount(oneVideo.video_id)}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration(oneVideo.video_id)} mins watched</span>
                 </div>
               </Link>
             </div>
