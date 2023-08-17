@@ -93,7 +93,7 @@ export default function Home() {
                 <div className="flex flex-col w-full ml-1 pr-2">
                   <span className="font-medium text-md text-gray-900 break-words">{oneVideo.shorted_video_title}</span>
                   <span className="text-sm break-words">{oneVideo.creator_name}</span>
-                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration()} mins watched</span>
+                  <span className="text-xs mt-1"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount(oneVideo.video_id)}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration(oneVideo.video_id)} mins watched</span>
                 </div>
               </Link>
             </div>

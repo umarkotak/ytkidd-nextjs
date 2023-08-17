@@ -20,6 +20,8 @@ export default function Watch() {
   const [mobileMode, setMobileMode] = useState(true)
 
   useEffect(() => {
+    if (typeof(window) === "undefined") { return }
+
     if (window.innerWidth <= 1000) {
       setMobileMode(true)
     } else {
@@ -55,6 +57,7 @@ export default function Watch() {
 
   const [videoList, setVideoList] = useState([])
   const [selectedVideo, setSelectedVideo] = useState(new YtVideo({}))
+  const [selectedVideoStat, setSelectedVideoStat] = useState({})
   const [allVideo, setAllVideo] = useState([])
 
   useEffect(() => {
@@ -74,12 +77,13 @@ export default function Watch() {
       }
 
       var selectedVidObj
-      allVideoShuffled.forEach(tmpOneVideo => {
+      tmpAllVideo.forEach(tmpOneVideo => {
         if (searchParams.get('ytkidd_id') === tmpOneVideo.ytkidd_id) {
-          selectedVidObj = new YtVideo(tmpOneVideo)
+          selectedVidObj = tmpOneVideo
         }
       })
 
+      selectedVidObj.IncreaseViewCount(searchParams.get('v'))
       setSelectedVideo(selectedVidObj)
     })
 
@@ -90,6 +94,10 @@ export default function Watch() {
   }, [])
 
   useEffect(() => {
+    if (!searchParams.get('ytkidd_id')) {
+      return
+    }
+
     limit = 20
     allVideoShuffled = [...Utils.ShuffleArray(allVideo)]
     setVideoList(allVideoShuffled.slice(0, limit))
@@ -97,12 +105,21 @@ export default function Watch() {
     var selectedVidObj
     allVideoShuffled.forEach(tmpOneVideo => {
       if (searchParams.get('ytkidd_id') === tmpOneVideo.ytkidd_id) {
-        selectedVidObj = new YtVideo(tmpOneVideo)
+        selectedVidObj = tmpOneVideo
       }
     })
 
+    if (typeof(selectedVidObj) === "undefined") { return }
+
     setSelectedVideo(selectedVidObj)
   }, [searchParams])
+
+  useEffect(() => {
+    setSelectedVideoStat({
+      "total_watch_duration": selectedVideo.GetWatchedDuration(searchParams.get('v')),
+      "view_count": selectedVideo.GetViewedCount(searchParams.get('v'))
+    })
+  }, [selectedVideo])
 
   const [triggerNextPage, setTriggerNextPage] = useState(0)
   const handleScroll = () => {
@@ -137,7 +154,7 @@ export default function Watch() {
 
     initialTime = currentTime
 
-    selectedVideo.IncreaseWatchDuration(searchParams.get('v'),totalElapsedSeconds)
+    selectedVideo.IncreaseWatchDuration(searchParams.get('v'),elapsedSeconds)
 
     await Utils.Sleep(5*1000)
     ticker()
@@ -180,7 +197,7 @@ export default function Watch() {
             <div>
             </div>
             <div>
-              <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {selectedVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {selectedVideo.GetWatchedDuration(searchParams.get('v'))} mins watched</span>
+              <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {selectedVideoStat.view_count}x viewed﹒<i className="fa-solid fa-clock"/> {selectedVideoStat.total_watch_duration} mins watched</span>
             </div>
           </div>
         </div>
@@ -205,7 +222,7 @@ export default function Watch() {
                     </Link>
                     <span className='flex-auto'>{oneVideo.creator_name}</span>
                   </span>
-                  <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount()}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration()} mins watched</span>
+                  <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount(oneVideo.video_id)}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration(oneVideo.video_id)} mins watched</span>
                 </div>
               </Link>
             </div>

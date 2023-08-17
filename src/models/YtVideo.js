@@ -26,7 +26,13 @@ export default class YtVideo {
     var videoStat = this.GetLocalVideoStat(key)
     videoStat.total_watch_duration += durationSecond
     localStorage.setItem(key, JSON.stringify(videoStat))
-    console.log(key, durationSecond)
+  }
+
+  IncreaseViewCount(videoID) {
+    var key = `YTKIDD:VIDEO_STAT:${videoID}`
+    var videoStat = this.GetLocalVideoStat(key)
+    videoStat.view_count += 1
+    localStorage.setItem(key, JSON.stringify(videoStat))
   }
 
   GetLocalVideoStat(key) {
@@ -47,8 +53,18 @@ export default class YtVideo {
     return videoStat
   }
 
-  GetViewedCount() {
-    return 0
+  GetViewedCount(videoID) {
+    var selectedVideoID = this.video_id
+    if (videoID !== "") {
+      selectedVideoID = videoID
+    }
+
+    if (typeof(localStorage) === "undefined") { return 0 }
+
+    var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
+    if (!localStorage.getItem(key)) { return 0 }
+    var videoStat = JSON.parse(localStorage.getItem(key))
+    return videoStat.view_count
   }
 
   GetWatchedDuration(videoID) {
@@ -57,10 +73,10 @@ export default class YtVideo {
       selectedVideoID = videoID
     }
 
-    if (typeof(localStorage) === "undefined") {return 0}
+    if (typeof(localStorage) === "undefined") { return 0 }
 
     var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
-    if (!localStorage.getItem(key)) {return 0}
+    if (!localStorage.getItem(key)) { return 0 }
     var videoStat = JSON.parse(localStorage.getItem(key))
     return Math.floor(videoStat.total_watch_duration/60)
   }
