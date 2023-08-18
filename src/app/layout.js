@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
 
         <Navbar/>
 
-        <div className='mt-[64px] z-1 flex'>
+        <div className='mt-[64px] flex'>
           <Sidebar/>
 
           <div id="content-section" className='ml-[200px] w-full'>

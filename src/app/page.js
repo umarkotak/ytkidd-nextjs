@@ -17,10 +17,17 @@ export default function Home() {
   useEffect(() => {
     limit = 20
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
-      var arr = json.map((v) => {
+      var arr = []
+      json.forEach((v) => {
         var ytVideo = new YtVideo(v)
-        return ytVideo
+
+        if (localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL:${ytVideo.channel_id}`)) {
+          return
+        }
+
+        arr.push(ytVideo)
       })
+
       allVideo = Utils.ShuffleArray(arr)
       setVideoList(allVideo.slice(0, limit))
     })

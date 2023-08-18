@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import YouTube from 'react-youtube'
 import Link from 'next/link'
+import {Img} from 'react-image'
 
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
@@ -16,7 +17,7 @@ var totalElapsedSeconds = 0
 export default function Watch() {
   const searchParams = useSearchParams()
 
-  const [videoPlayerHeight, setVideoPlayerHeight] = useState(360)
+  const [videoPlayerHeight, setVideoPlayerHeight] = useState(0)
   const [mobileMode, setMobileMode] = useState(true)
 
   useEffect(() => {
@@ -62,9 +63,15 @@ export default function Watch() {
 
   useEffect(() => {
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
-      var tmpAllVideo = json.map((v) => {
+      var tmpAllVideo = []
+      json.forEach((v) => {
         var ytVideo = new YtVideo(v)
-        return ytVideo
+
+        if (localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL:${ytVideo.channel_id}`)) {
+          return
+        }
+
+        tmpAllVideo.push(ytVideo)
       })
 
       setAllVideo(tmpAllVideo)
@@ -164,8 +171,8 @@ export default function Watch() {
     <main className={`pb-[100px] ${mobileMode ? "" : "m-6"}`}>
       <div className={`flex ${mobileMode ? "flex-col" : ""}`}>
         <div className='w-full mr-4 mb-4'>
-          <div ref={videoPlayerDivRef} id="video-content" className={`w-full ${mobileMode ? "fixed z-1 top-16" : ""}`}>
-            <YouTube id="video-player" videoId={searchParams.get('v')} opts={{
+          <div ref={videoPlayerDivRef} id="video-content" className={`w-full ${mobileMode ? "fixed z-0 top-16" : ""}`}>
+            <YouTube id="video-player" className='' videoId={searchParams.get('v')} opts={{
               height: `${videoPlayerHeight}`,
               width: '100%',
               playerVars: {
@@ -175,23 +182,23 @@ export default function Watch() {
             }} />
           </div>
           <div className={`${mobileMode ? "mt-[250px]" : "mt-4"}`}>
-            <span className="font-semibold text-2xl text-gray-900 leading-5">{selectedVideo.video_title}</span>
+            <span className="font-semibold text-2xl text-gray-900 leading-relaxed">{selectedVideo.video_title}</span>
           </div>
           <div className='flex justify-between items-center mt-2'>
-            <div className='flex items-center'>
-              <Link href={`/channel?channel_id=${selectedVideo.channel_id}`}>
-                <img src={selectedVideo.creator_image_url} alt="Avatar" className="h-10 w-10 rounded-full" />
+            <div className='flex items-center mr-2'>
+              <Link href={`/channel?channel_id=${selectedVideo.channel_id}`} className='flex-none'>
+                <Img src={[selectedVideo.creator_image_url, selectedVideo.creator_image_url]} alt="Avatar" className="min-h-10 min-w-10 max-h-10 max-w-10 rounded-full" />
               </Link>
-              <span className='text-lg font-semibold text-gray-800 ml-4'>{selectedVideo.creator_name}</span>
+              <span className='text-sm font-semibold text-gray-800 ml-4'>{selectedVideo.creator_name}</span>
             </div>
-            <div className='flex'>
-              <button className='py-1 px-3 rounded-full text-black bg-gray-200 hover:bg-gray-300'>
-                <i className="fa-solid fa-circle-arrow-up"></i> Upvote
-              </button>
-              <button className='py-1 px-3 rounded-full text-black bg-gray-200 hover:bg-gray-300 ml-2'>
-                <i className="fa-solid fa-circle-arrow-down"></i> Downvote
-              </button>
-            </div>
+          </div>
+          <div className='flex mt-2 justify-end'>
+            <button className='py-1 px-3 rounded-full text-black text-sm bg-gray-200 hover:bg-gray-300'>
+              <i className="fa-solid fa-circle-arrow-up"></i> Upvote
+            </button>
+            <button className='py-1 px-3 rounded-full text-black text-sm bg-gray-200 hover:bg-gray-300 ml-2'>
+              <i className="fa-solid fa-circle-arrow-down"></i> Downvote
+            </button>
           </div>
           <div className='p-4 bg-gray-200 mt-4 rounded-lg'>
             <div>
@@ -218,7 +225,7 @@ export default function Watch() {
                   <span className="font-medium text-md text-gray-900 leading-5">{oneVideo.shorted_video_title}</span>
                   <span className="flex text-sm text-gray-800 mt-1 items-center">
                     <Link href={`/channel?channel_id=${oneVideo.channel_id}`} className="flex-none mr-2">
-                      <img src={oneVideo.creator_image_url} alt="Avatar" className="w-full max-h-7 min-h-7 max-w-7 min-w-7 rounded-full" />
+                      <Img src={[oneVideo.creator_image_url, oneVideo.creator_image_url, "/images/youtube.png"]} alt="Avatar" className="w-full max-h-7 min-h-7 max-w-7 min-w-7 rounded-full" />
                     </Link>
                     <span className='flex-auto'>{oneVideo.creator_name}</span>
                   </span>

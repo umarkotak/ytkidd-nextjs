@@ -66,11 +66,11 @@ export default function Channel() {
 
   return (
     <main className='pb-[100px] p-4'>
-      <div className='mb-10 flex'>
+      <div className='mb-8 flex items-center px-2 pt-2 pb-4 rounded-xl shadow-md'>
         <div className='mr-6'>
           <img className="w-24 h-24 rounded-full shadow-md w-full" src={selectedChannel.channel_image_url} alt="thumb" />
         </div>
-        <div className='py-4'>
+        <div className=''>
           <span className='text-xl'>{selectedChannel.channel_name}</span>
         </div>
       </div>

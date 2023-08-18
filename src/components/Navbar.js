@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function Navbar() {
   return (
-    <nav className="z-5 fixed top-0 border-b-2 border-gray-200 w-full bg-white px-4 flex justify-between items-center h-16">
+    <nav className="fixed z-50 top-0 border-b-2 border-gray-200 w-full bg-white px-4 flex justify-between items-center h-16" style={{zIndex: 10}}>
       <div className="flex items-center">
         <div className="mr-4">
           <button className="p-1" onClick={() => {HideSideBar()}}>
@@ -28,7 +28,7 @@ export default function Navbar() {
       </div>
 
       <div>
-        <img src="http://placekitten.com/300/300" alt="Avatar" className="h-8 w-8 rounded-full" />
+        <img src="/images/youtube.png" alt="Avatar" className="h-8 w-8 rounded-full" />
       </div>
     </nav>
   )
