@@ -1,12 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
 
 import { useGetChannels } from '@/hooks'
 
 export default function Channels() {
-  const { data: channelList } = useGetChannels()
+  const { data: channelList } = useGetChannels({ isRandomList: false })
 
   function getDefaultChecked(channelID) {
     if (localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL:${channelID}`)) {

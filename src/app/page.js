@@ -9,7 +9,7 @@ import { useGetChannels, useGetVideos } from '@/hooks'
 
 export default function Home() {
   const { data: videoList, limit: limitVideos, fetchingDataWithPagination } = useGetVideos()
-  const { data: channelList } = useGetChannels()
+  const { data: channelList } = useGetChannels({ isRandomList: true })
   const [triggerNextPage, setTriggerNextPage] = useState(0)
 
   const handleScroll = () => {

@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import Utils from '@/models/Utils'
 
-export const useGetChannels = () => {
+/**
+ *
+ * @param {Boolean} isRandomList
+ * @returns
+ */
+export const useGetChannels = ({ isRandomList }) => {
   const isFetching = true
   const [data, setData] = useState({
     data: [],
@@ -20,7 +25,7 @@ export const useGetChannels = () => {
             return v
           })
 
-          const allChannels = Utils.ShuffleArray(arr)
+          const allChannels = isRandomList ? Utils.ShuffleArray(arr) : arr
           setData({
             ...data,
             data: allChannels,
