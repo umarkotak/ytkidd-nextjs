@@ -14,26 +14,40 @@ var allVideoShuffled = []
 var initialTime = Math.floor(Date.now() / 1000)
 var totalElapsedSeconds = 0
 
+var mobileModeLimit = 470
+var smallWebLimit = 1015
+
 export default function Watch() {
   const searchParams = useSearchParams()
 
   const [videoPlayerHeight, setVideoPlayerHeight] = useState(0)
   const [mobileMode, setMobileMode] = useState(true)
+  const [smallWebMode, setSmallWebMode] = useState(true)
 
   useEffect(() => {
     if (typeof(window) === "undefined") { return }
 
-    if (window.innerWidth <= 1000) {
+    if (window.innerWidth <= mobileModeLimit) {
       setMobileMode(true)
+      setSmallWebMode(true)
+    } else if (window.innerWidth <= smallWebLimit) {
+      setMobileMode(false)
+      setSmallWebMode(true)
     } else {
       setMobileMode(false)
+      setSmallWebMode(false)
     }
 
     const onResize = () => {
-      if (window.innerWidth <= 1000) {
+      if (window.innerWidth <= mobileModeLimit) {
         setMobileMode(true)
+        setSmallWebMode(true)
+      } else if (window.innerWidth <= smallWebLimit) {
+        setMobileMode(false)
+        setSmallWebMode(true)
       } else {
         setMobileMode(false)
+        setSmallWebMode(false)
       }
     }
 
@@ -167,11 +181,23 @@ export default function Watch() {
     ticker()
   }
 
+  function pageModeClass(tmpMobileMode, tmpSmallWebMode) {
+    if (tmpMobileMode) { return "flex flex-col" }
+    if (tmpSmallWebMode) { return `flex flex-col` }
+    return `flex`
+  }
+
+  function videoContainerClass(tmpMobileMode, tmpSmallWebMode) {
+    if (tmpMobileMode) { return "w-full fixed z-0 top-16" }
+    if (tmpSmallWebMode) { return `w-full` }
+    return `w-full`
+  }
+
   return (
     <main className={`pb-[100px] ${mobileMode ? "" : "m-6"}`}>
-      <div className={`flex ${mobileMode ? "flex-col" : ""}`}>
+      <div className={pageModeClass(mobileMode, smallWebMode)}>
         <div className='w-full mr-4 mb-4'>
-          <div ref={videoPlayerDivRef} id="video-content" className={`w-full ${mobileMode ? "fixed z-0 top-16" : ""}`}>
+          <div ref={videoPlayerDivRef} id="video-content" className={videoContainerClass(mobileMode, smallWebMode)}>
             <YouTube id="video-player" className='' videoId={searchParams.get('v')} opts={{
               height: `${videoPlayerHeight}`,
               width: '100%',
@@ -181,10 +207,13 @@ export default function Watch() {
               },
             }} />
           </div>
-          <div className={`${mobileMode ? "mt-[250px]" : "mt-4"}`}>
+          <div
+            className={`${mobileMode ? "mx-2" : ""}`}
+            style={{marginTop: (mobileMode ? `${videoPlayerHeight+16}px` : "16px")}}
+          >
             <span className="font-semibold text-2xl text-gray-900 leading-relaxed">{selectedVideo.video_title}</span>
           </div>
-          <div className='flex justify-between items-center mt-2'>
+          <div className={`flex justify-between items-center mt-2 ${mobileMode ? "mx-2" : ""}`}>
             <div className='flex items-center mr-2'>
               <Link href={`/channel?channel_id=${selectedVideo.channel_id}`} className='flex-none'>
                 <Img src={[selectedVideo.creator_image_url, selectedVideo.creator_image_url]} alt="Avatar" className="min-h-10 min-w-10 max-h-10 max-w-10 rounded-full" />

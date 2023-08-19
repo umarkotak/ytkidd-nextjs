@@ -63,7 +63,7 @@ export default function Home() {
   }, [triggerNextPage])
 
   return (
-    <main className='pb-[100px] p-4'>
+    <main className='pb-[100px] p-4 w-full'>
       <div className='mb-4 flex overflow-x-auto w-full pb-4'>
         {channelList.map((oneChannel, idx) => (
           <>
@@ -82,9 +82,9 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-5 gap-y-8">
         {videoList.map((oneVideo)=>(
-          <div key={oneVideo.ytkidd_id} className=''>
+          <div key={oneVideo.ytkidd_id} className='w-full'>
             <div>
               <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}>
                 <img className="rounded-xl shadow-md w-full" src={oneVideo.video_image_url} alt="thumb" />
