@@ -6,13 +6,14 @@ import YtVideo from '@/models/YtVideo'
 
 export const useGetVideos = () => {
   const isFetching = true
+  const limit = 20
+  const [allVideos, setAllVideos] = useState([])
   const [data, setData] = useState({
-    limit: 20,
     data: [],
     isLoading: false,
   })
 
-  const fetchingData = useCallback(async ({ params = {} }) => {
+  const fetchingData = useCallback(async () => {
     setData({ ...data, isLoading: true })
     try {
       fetch('/data/db.json')
@@ -30,9 +31,10 @@ export const useGetVideos = () => {
           })
 
           const allVideo = Utils.ShuffleArray(arr)
+          setAllVideos(allVideo)
           setData({
             ...data,
-            data: allVideo.slice(0, params?.limit || data.limit),
+            data: allVideo.slice(0, limit),
             isLoading: false,
           })
         })
@@ -41,9 +43,22 @@ export const useGetVideos = () => {
     }
   })
 
+  const fetchingDataWithPagination = useCallback(async (params) => {
+    setData({ ...data, isLoading: true })
+    try {
+      setData({
+        ...data,
+        data: allVideos.slice(0, params?.limit || limit),
+        isLoading: false,
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  })
+
   useEffect(() => {
-    if (isFetching) fetchingData({ params: {} })
+    if (isFetching) fetchingData()
   }, [isFetching])
 
-  return { ...data, fetchingData }
+  return { ...data, limit, fetchingDataWithPagination }
 }

@@ -8,7 +8,7 @@ import VideoCard from '@/components/VideoCard'
 import { useGetChannels, useGetVideos } from '@/hooks'
 
 export default function Home() {
-  const { data: videoList, limit: limitVideos, fetchingData } = useGetVideos()
+  const { data: videoList, limit: limitVideos, fetchingDataWithPagination } = useGetVideos()
   const { data: channelList } = useGetChannels()
   const [triggerNextPage, setTriggerNextPage] = useState(0)
 
@@ -29,7 +29,7 @@ export default function Home() {
 
   useEffect(() => {
     let limit = limitVideos
-    fetchingData({ params: { limit: videoList.length + limit } })
+    fetchingDataWithPagination({ limit: videoList.length + limit })
   }, [triggerNextPage])
 
   return (
