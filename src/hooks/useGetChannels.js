@@ -33,7 +33,7 @@ export const useGetChannels = () => {
   })
 
   useEffect(() => {
-    if (isFetching) fetchingData({ params: {} })
+    if (isFetching) fetchingData()
   }, [isFetching])
 
   return { ...data, fetchingData }
