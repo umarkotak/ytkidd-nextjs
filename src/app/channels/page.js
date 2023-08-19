@@ -68,7 +68,7 @@ export default function Channels() {
               href={`/channel?channel_id=${oneChannel.channel_id}`}
               className='grow flex flex-col justify-start my-3 bg-white rounded-full'
             >
-              <span className='text-lg text-black'>{oneChannel.channel_name}</span>
+              <span className='text-lg text-black font-semibold'>{oneChannel.channel_name}</span>
               <small className=''>{oneChannel.string_tags}</small>
             </Link>
             <div className='flex flex-col'>

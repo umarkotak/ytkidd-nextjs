@@ -26,6 +26,8 @@ export default class YtVideo {
     var videoStat = this.GetLocalVideoStat(key)
     videoStat.total_watch_duration += durationSecond
     localStorage.setItem(key, JSON.stringify(videoStat))
+
+    this.IncreaseDailyWatchDuration(this.GetCurrentDate(), durationSecond)
   }
 
   IncreaseViewCount(videoID) {
@@ -33,6 +35,8 @@ export default class YtVideo {
     var videoStat = this.GetLocalVideoStat(key)
     videoStat.view_count += 1
     localStorage.setItem(key, JSON.stringify(videoStat))
+
+    this.IncreaseDailyViewCount(this.GetCurrentDate())
   }
 
   GetLocalVideoStat(key) {
@@ -42,7 +46,41 @@ export default class YtVideo {
       "latest_watched_at_unix": 0
     }
 
-    if (typeof(localStorage) === "undefined") {return 0}
+    if (typeof(localStorage) === "undefined") {return {}}
+
+    if (localStorage.getItem(key)) {
+      videoStat = JSON.parse(localStorage.getItem(key))
+    } else {
+      localStorage.setItem(key, JSON.stringify(videoStat))
+    }
+
+    return videoStat
+  }
+
+  IncreaseDailyWatchDuration(currentDate, durationSecond) {
+    var key = `YTKIDD:DAILY_VIDEO_STAT:${currentDate}`
+    var videoStat = this.GetDailyLocalVideoStat(key)
+
+    videoStat.total_watch_duration += durationSecond
+    localStorage.setItem(key, JSON.stringify(videoStat))
+  }
+
+  IncreaseDailyViewCount(currentDate) {
+    var key = `YTKIDD:DAILY_VIDEO_STAT:${currentDate}`
+    var videoStat = this.GetDailyLocalVideoStat(key)
+
+    videoStat.view_count += 1
+    localStorage.setItem(key, JSON.stringify(videoStat))
+  }
+
+  GetDailyLocalVideoStat(key) {
+    var videoStat = {
+      "total_watch_duration": 0,
+      "view_count": 0,
+      "latest_watched_at_unix": 0
+    }
+
+    if (typeof(localStorage) === "undefined") {return {}}
 
     if (localStorage.getItem(key)) {
       videoStat = JSON.parse(localStorage.getItem(key))
@@ -79,5 +117,10 @@ export default class YtVideo {
     if (!localStorage.getItem(key)) { return 0 }
     var videoStat = JSON.parse(localStorage.getItem(key))
     return Math.floor(videoStat.total_watch_duration/60)
+  }
+
+  GetCurrentDate() {
+    var d = new Date()
+    return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`
   }
 }
