@@ -8,6 +8,10 @@ export const useGetVideos = () => {
   const isFetching = true
   const limit = 20
   const [allVideos, setAllVideos] = useState([])
+  const [searchVideos, setSearchVideos] = useState({
+    data: [],
+    isLoading: false,
+  })
   const [data, setData] = useState({
     data: [],
     isLoading: false,
@@ -56,9 +60,37 @@ export const useGetVideos = () => {
     }
   })
 
+  const searchVideosWithKeyword = useCallback(async (params) => {
+    try {
+      setSearchVideos({ ...data, isLoading: params?.keyword !== null ? true : false })
+      const search = !!params?.keyword
+        ? allVideos.filter((item) =>
+            item.video_title.toLowerCase().includes(params?.keyword.toLowerCase()),
+          )
+        : []
+      setTimeout(() => {
+        setSearchVideos({
+          ...data,
+          data: search,
+          isLoading: false,
+        })
+      }, 1000)
+    } catch (error) {
+      setSearchVideos({ ...data, isLoading: false })
+      console.error(error)
+    }
+  })
+
   useEffect(() => {
     if (isFetching) fetchingData()
   }, [isFetching])
 
-  return { ...data, limit, fetchingDataWithPagination }
+  return {
+    ...data,
+    allVideos,
+    searchVideos,
+    limit,
+    fetchingDataWithPagination,
+    searchVideosWithKeyword,
+  }
 }

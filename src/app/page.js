@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Fragment } from 'react'
+import { useState, useEffect } from 'react'
 
 import ChannelList from '@/components/ChannelList'
 import VideoCard from '@/components/VideoCard'
@@ -8,7 +8,12 @@ import VideoCard from '@/components/VideoCard'
 import { useGetChannels, useGetVideos } from '@/hooks'
 
 export default function Home() {
-  const { data: videoList, limit: limitVideos, fetchingDataWithPagination } = useGetVideos()
+  const {
+    data: videoList,
+    limit: limitVideos,
+    fetchingDataWithPagination,
+    allVideos,
+  } = useGetVideos()
   const { data: channelList } = useGetChannels({ isRandomList: true })
   const [triggerNextPage, setTriggerNextPage] = useState(0)
 
@@ -29,7 +34,9 @@ export default function Home() {
 
   useEffect(() => {
     let limit = limitVideos
-    fetchingDataWithPagination({ limit: videoList.length + limit })
+    const isEligibleFetching = videoList.length < allVideos.length
+
+    if (isEligibleFetching) fetchingDataWithPagination({ limit: videoList.length + limit })
   }, [triggerNextPage])
 
   return (
