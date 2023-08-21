@@ -5,8 +5,13 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { useSearchParams } from 'next/navigation'
+import { useCronitor } from '@cronitorio/cronitor-rum-nextjs'
 
 export default function Navbar() {
+  useCronitor('3f97b0a02f683b7af499e046f0495786', {
+    debug: false
+  })
+
   const router = useRouter()
   const keywordSearch = useSearchParams()?.get('keyword')
   const [keyword, setKeyword] = useState('')

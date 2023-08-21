@@ -1,6 +1,5 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
-import { useCronitor } from '@cronitorio/cronitor-rum-nextjs'
 
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
@@ -13,10 +12,6 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  useCronitor('3f97b0a02f683b7af499e046f0495786', {
-    debug: false
-  })
-
   return (
     <html lang="en">
       <head>
