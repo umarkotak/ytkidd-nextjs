@@ -20,6 +20,24 @@ export default function Navbar() {
     if (event.key === 'Enter') router.push(`/search?keyword=${keyword}`)
   }
 
+  function HideSideBar() {
+    var element = document.getElementById("sidebar")
+    element.classList.toggle("hidden")
+
+    if (window.location.pathname === "/watch") {
+      return
+    }
+
+    if (window.innerWidth <= 470) {
+      var element = document.getElementById("content-section")
+      element.classList.remove("ml-[200px]")
+      element.classList.add("mobile-mode")
+    } else {
+      var element = document.getElementById("content-section")
+      element.classList.toggle("ml-[200px]")
+    }
+  }
+
   return (
     <nav
       className="fixed z-50 top-0 border-b-2 border-gray-200 w-full bg-white px-4 flex justify-between items-center h-16"

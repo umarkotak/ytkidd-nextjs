@@ -26,7 +26,6 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={inter.className} suppressHydrationWarning={true}>
-        <Script src="/scripts/custom.js" strategy="beforeInteractive" />
         <Navbar />
         <div className="mt-[64px] flex">
           <Sidebar />
