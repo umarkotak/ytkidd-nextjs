@@ -119,6 +119,28 @@ export default class YtVideo {
     return Math.floor(videoStat.total_watch_duration/60)
   }
 
+  PushToDailyWatchHistory(videoID) {
+    var dailyWatchHistoryKey = `YTKIDD:DAILY_VIDEO_HISTORY:${this.GetCurrentDate()}`
+
+    var dailyWatchHistories = []
+
+    if (localStorage.getItem(dailyWatchHistoryKey)) {
+      dailyWatchHistories = JSON.parse(localStorage.getItem(dailyWatchHistoryKey))
+    }
+
+    dailyWatchHistories = dailyWatchHistories.filter(function( obj ) {
+      return obj.video_id !== videoID
+    })
+
+    dailyWatchHistories.unshift(this.YtVideo)
+
+    if (!this.YtVideo.video_id) {
+      return
+    }
+
+    localStorage.setItem(dailyWatchHistoryKey, JSON.stringify(dailyWatchHistories))
+  }
+
   GetCurrentDate() {
     var d = new Date()
     return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`

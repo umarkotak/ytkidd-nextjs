@@ -3,12 +3,16 @@
 import { useState, useEffect } from 'react'
 import { ComposedChart, Bar, LabelList, Cell, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
+import YtVideo from '@/models/YtVideo'
+import VideoCard from '@/components/VideoCard'
+
 export default function Stats() {
   const [activeDate, setActiveDate] = useState({
     name: "N/A"
   })
   const [limitDays, setLimitDays] = useState(7)
   const [dateStat, setDateStat] = useState([])
+  const [videoList, setVideoList] = useState([])
 
   useEffect(() => {
     if (!localStorage) { return }
@@ -52,12 +56,76 @@ export default function Stats() {
   }
 
   function AddSample() {
-    var key = `YTKIDD:DAILY_VIDEO_STAT:2023-8-17`
+    var key = `YTKIDD:DAILY_VIDEO_STAT:2023-8-22`
     localStorage.setItem(key, JSON.stringify({
       "total_watch_duration": 1000,
       "view_count": 10,
       "latest_watched_at_unix": 0
     }))
+  }
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-gray-200 bg-opacity-80 p-2 rounded-xl">
+          <p className="">Date: {label}</p>
+          <p className="">{(payload[0].value)} x watched</p>
+          <p className="">total: {payload[1].value} mins</p>
+        </div>
+      )
+    }
+    return null
+  }
+
+  useEffect(() => {
+    if (!localStorage) { return }
+
+    var dailyWatchHistoryKey = `YTKIDD:DAILY_VIDEO_HISTORY:${activeDate.name}`
+
+    if (!localStorage.getItem(dailyWatchHistoryKey)) {
+      setVideoList([])
+      return
+    }
+
+    var tmpVideoList = JSON.parse(localStorage.getItem(dailyWatchHistoryKey))
+
+    var videoListObj = tmpVideoList.map((oneVideo) => {
+      return new YtVideo(oneVideo)
+    })
+
+    setVideoList(videoListObj)
+
+  }, [activeDate])
+
+  function PrevDate() {
+    var tmpCurrDate = activeDate.name
+    setActiveDate({
+      name: decreaseDate(tmpCurrDate, 1)
+    })
+  }
+
+  function NextDate() {
+    var tmpCurrDate = activeDate.name
+    setActiveDate({
+      name: increaseDate(tmpCurrDate, 1)
+    })
+  }
+
+  function formatDate(date) {
+    const parts = date.split('-');
+    return new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+  }
+
+  function increaseDate(date, days) {
+    const formattedDate = formatDate(date);
+    formattedDate.setDate(formattedDate.getDate() + days);
+    return `${formattedDate.getFullYear()}-${formattedDate.getMonth()+1}-${formattedDate.getDate()}`
+  }
+
+  function decreaseDate(date, days) {
+    const formattedDate = formatDate(date);
+    formattedDate.setDate(formattedDate.getDate() - days);
+    return `${formattedDate.getFullYear()}-${formattedDate.getMonth()+1}-${formattedDate.getDate()}`
   }
 
   return (
@@ -72,12 +140,12 @@ export default function Stats() {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" fill='#020617'/>
             {/* <YAxis fill='#020617' /> */}
-            <Tooltip/>
+            <Tooltip content={<CustomTooltip />} />
             <Legend/>
             <Bar dataKey="view_count" onClick={handleClick} barSize={20} fill='#0284c7'>
               {dateStat.map((entry, index) => (
                 <>
-                  {console.log(entry)}
+                  {/* {console.log(entry)} */}
                   <Cell cursor="pointer" fill={entry.name === activeDate.name ? '#e11d48' : '#0284c7'} key={`cell-${index}`}/>
                 </>
               ))}
@@ -89,18 +157,46 @@ export default function Stats() {
             </Line>
           </ComposedChart>
         </ResponsiveContainer>
-
-        {/* <button onClick={()=>AddSample()} className='bg-gray-200 p-2 rounded-xl'>Add sample</button> */}
       </div>
 
-      <div>
+      {/* <div>
+        <button onClick={()=>AddSample()} className='bg-gray-200 p-2 rounded-xl'>Add sample</button>
+      </div> */}
+
+      <div className='mt-4'>
         <div className='mb-6'>
           <div className='flex items-center'>
-            <button className='p-2 bg-gray-300 hover:bg-gray-400 rounded-lg mr-2'><i className='fa-solid fa-arrow-left'/></button>
-            <h1 className='text-xl mr-2'>{activeDate.name} Stat</h1>
-            <button className='p-2 bg-gray-300 hover:bg-gray-400 rounded-lg mr-2'><i className='fa-solid fa-arrow-right'/></button>
+            <button
+              className='py-2 px-3 bg-gray-300 hover:bg-gray-400 rounded-2xl mr-2'
+              onClick={()=>PrevDate()}
+            ><i className='fa-solid fa-arrow-left'/></button>
+
+            <h1 className='text-xl mr-2'>{activeDate.name} History</h1>
+
+            <button
+              className='py-2 px-3 bg-gray-300 hover:bg-gray-400 rounded-2xl mr-2'
+              onClick={()=>NextDate()}
+            ><i className='fa-solid fa-arrow-right'/></button>
           </div>
-          <small>track how much you watch video</small>
+        </div>
+
+        <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-8">
+            {videoList.map((oneVideo) => (
+              <VideoCard
+                key={oneVideo.video_id}
+                ytkiddId={oneVideo.ytkidd_id}
+                videoId={oneVideo.video_id}
+                videoImageUrl={oneVideo.video_image_url}
+                channelId={oneVideo.channel_id}
+                creatorImageUrl={oneVideo.creator_image_url}
+                shortedVideoTitle={oneVideo.shorted_video_title}
+                creatorName={oneVideo.creator_name}
+                viewedCounts={oneVideo.GetViewedCount(oneVideo.video_id)}
+                watchedDurations={oneVideo.GetWatchedDuration(oneVideo.video_id)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </main>

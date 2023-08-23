@@ -140,6 +140,8 @@ export default function Watch() {
       "total_watch_duration": selectedVideo.GetWatchedDuration(searchParams.get('v')),
       "view_count": selectedVideo.GetViewedCount(searchParams.get('v'))
     })
+
+    selectedVideo.PushToDailyWatchHistory(selectedVideo.video_id)
   }, [selectedVideo])
 
   const [triggerNextPage, setTriggerNextPage] = useState(0)
