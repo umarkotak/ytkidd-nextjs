@@ -74,6 +74,7 @@ export default function Watch() {
   const [selectedVideo, setSelectedVideo] = useState(new YtVideo({}))
   const [selectedVideoStat, setSelectedVideoStat] = useState({})
   const [allVideo, setAllVideo] = useState([])
+  const [blockVideoRecomm, setBlockVideoRecomm] = useState(false)
 
   useEffect(() => {
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
@@ -200,14 +201,31 @@ export default function Watch() {
       <div className={pageModeClass(mobileMode, smallWebMode)}>
         <div className='w-full mr-4 mb-4'>
           <div ref={videoPlayerDivRef} id="video-content" className={videoContainerClass(mobileMode, smallWebMode)}>
-            <YouTube id="video-player" className='' videoId={searchParams.get('v')} opts={{
-              height: `${videoPlayerHeight}`,
-              width: '100%',
-              playerVars: {
-                // https://developers.google.com/youtube/player_parameters
-                autoplay: 1,
-              },
-            }} />
+            <div className='relative'>
+              <YouTube
+                id="video-player"
+                videoId={searchParams.get('v')}
+                opts={{
+                  height: `${videoPlayerHeight}`,
+                  width: '100%',
+                  playerVars: {
+                    // https://developers.google.com/youtube/player_parameters
+                    autoplay: 1,
+                  },
+                }}
+                onPlay={()=>{setBlockVideoRecomm(false)}}
+                onEnd={()=>{setBlockVideoRecomm(true)}}
+              />
+              <div className='absolute right-[52px] bottom-0 w-20 h-8 bg-black bg-opacity-0'>
+              </div>
+              <div
+                className={`${blockVideoRecomm ? "absolute left-0 bottom-14 w-full bg-black bg-opacity-100 h-full" : ""}`}
+                style={{
+                  // height: `${blockVideoRecomm ? videoPlayerHeight*70/100 : 0}px`,
+                }}
+              >
+              </div>
+            </div>
           </div>
           <div
             className={`${mobileMode ? "mx-2" : ""}`}
@@ -251,9 +269,9 @@ export default function Watch() {
                   />
                 </Link>
               </div>
-              <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`} className='pr-2'>
+              <div className='pr-2'>
                 <div className='w-full ml-2 flex flex-col'>
-                  <span className="font-medium text-md text-gray-900 leading-5">{oneVideo.shorted_video_title}</span>
+                  <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`} className="font-medium text-md text-gray-900 leading-5">{oneVideo.shorted_video_title}</Link>
                   <span className="flex text-sm text-gray-800 mt-1 items-center">
                     <Link href={`/channel?channel_id=${oneVideo.channel_id}`} className="flex-none mr-2">
                       <Img src={[oneVideo.creator_image_url, oneVideo.creator_image_url, "/images/youtube.png"]} alt="Avatar" className="w-full max-h-7 min-h-7 max-w-7 min-w-7 rounded-full" />
@@ -262,7 +280,7 @@ export default function Watch() {
                   </span>
                   <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount(oneVideo.video_id)}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration(oneVideo.video_id)} mins watched</span>
                 </div>
-              </Link>
+              </div>
             </div>
           ))}
         </div>
