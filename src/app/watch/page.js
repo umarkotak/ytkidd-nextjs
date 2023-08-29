@@ -216,15 +216,15 @@ export default function Watch() {
                 onPlay={()=>{setBlockVideoRecomm(false)}}
                 onEnd={()=>{setBlockVideoRecomm(true)}}
               />
-              <div className='absolute right-[52px] bottom-0 w-20 h-8 bg-black bg-opacity-0'>
-              </div>
               <div
-                className={`${blockVideoRecomm ? "absolute left-0 bottom-14 w-full bg-black bg-opacity-100 h-full" : ""}`}
+                className='absolute right-[55px] bottom-0 w-20 h-8 bg-red-500 bg-opacity-90'
+              ></div>
+              <div
+                className={`${blockVideoRecomm ? "absolute left-0 bottom-14 w-full bg-red-500 bg-opacity-90 h-full" : ""}`}
                 style={{
                   // height: `${blockVideoRecomm ? videoPlayerHeight*70/100 : 0}px`,
                 }}
-              >
-              </div>
+              ></div>
             </div>
           </div>
           <div
@@ -260,7 +260,7 @@ export default function Watch() {
         <div id="suggestion-content" className={`${mobileMode ? "" : "min-w-[402px]"}`}>
           {videoList.map((oneVideo)=>(
             <div className='mb-5 flex' key={`${oneVideo.ytkidd_id}-${Math.random() * 100000}`}>
-              <div className='min-w-[168px] max-w-[168px] h-[94px]'>
+              <div className='flex-none w-[168px] h-[94px]'>
                 <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}>
                   <img
                     className={`${mobileMode ? "" : "rounded-xl"} shadow-md w-full h-full`}
@@ -271,10 +271,17 @@ export default function Watch() {
               </div>
               <div className='pr-2'>
                 <div className='w-full ml-2 flex flex-col'>
-                  <Link href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`} className="font-medium text-md text-gray-900 leading-5">{oneVideo.shorted_video_title}</Link>
+                  <Link
+                    href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}
+                    className="font-medium text-md text-gray-900 leading-5"
+                  >{oneVideo.shorted_video_title}</Link>
                   <span className="flex text-sm text-gray-800 mt-1 items-center">
-                    <Link href={`/channel?channel_id=${oneVideo.channel_id}`} className="flex-none mr-2">
-                      <Img src={[oneVideo.creator_image_url, oneVideo.creator_image_url, "/images/youtube.png"]} alt="Avatar" className="w-full max-h-7 min-h-7 max-w-7 min-w-7 rounded-full" />
+                    <Link href={`/channel?channel_id=${oneVideo.channel_id}`} className="flex-none mr-2 w-7 h-7 rounded-full">
+                      <Img
+                        src={[oneVideo.creator_image_url, oneVideo.creator_image_url, "/images/youtube.png"]}
+                        alt="Avatar"
+                        className="w-7 h-7 rounded-full"
+                      />
                     </Link>
                     <span className='flex-auto'>{oneVideo.creator_name}</span>
                   </span>
