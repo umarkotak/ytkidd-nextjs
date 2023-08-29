@@ -217,10 +217,10 @@ export default function Watch() {
                 onEnd={()=>{setBlockVideoRecomm(true)}}
               />
               <div
-                className='absolute right-[55px] bottom-0 w-20 h-8 bg-red-500 bg-opacity-90'
+                className='absolute right-[55px] bottom-0 w-28 rounded h-8 bg-red-100 bg-opacity-0'
               ></div>
               <div
-                className={`${blockVideoRecomm ? "absolute left-0 bottom-14 w-full bg-red-500 bg-opacity-90 h-full" : ""}`}
+                className={`${blockVideoRecomm ? "absolute left-0 bottom-14 w-full bg-black bg-opacity-90 h-full" : ""}`}
                 style={{
                   // height: `${blockVideoRecomm ? videoPlayerHeight*70/100 : 0}px`,
                 }}
