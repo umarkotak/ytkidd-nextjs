@@ -11,6 +11,7 @@
   "dependencies": {
     "@babel/runtime": "^7.22.10",
     "@cronitorio/cronitor-rum-nextjs": "^0.4.0",
+    "@ducanh2912/react-hls-player": "^3.3.5",
     "autoprefixer": "10.4.14",
     "next": "13.4.12",
     "postcss": "8.4.27",
