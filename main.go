@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -87,7 +87,7 @@ func main() {
 	}
 	defer creatorJsonFile.Close()
 
-	creatorByteValue, err := ioutil.ReadAll(creatorJsonFile)
+	creatorByteValue, err := io.ReadAll(creatorJsonFile)
 	if err != nil {
 		logrus.Error(err)
 		return
@@ -101,7 +101,7 @@ func main() {
 	}
 
 	// CONFIGURATION
-	selectedCreator := creators[1]
+	selectedCreator := creators[0]
 	logrus.Infof("START SCRAPPING %v CHANNEL", selectedCreator.ChannelName)
 	nextPageToken := ""
 	pageCount := 20
@@ -138,7 +138,7 @@ func main() {
 		}
 		defer res.Body.Close()
 
-		body, err := ioutil.ReadAll(res.Body)
+		body, err := io.ReadAll(res.Body)
 		if err != nil {
 			logrus.Error(err)
 			return
@@ -158,7 +158,7 @@ func main() {
 		}
 		defer jsonFile.Close()
 
-		byteValue, err := ioutil.ReadAll(jsonFile)
+		byteValue, err := io.ReadAll(jsonFile)
 		if err != nil {
 			logrus.Error(err)
 			return
@@ -177,8 +177,10 @@ func main() {
 			ytIdMap[oneDbVid.VideoID] = true
 		}
 
+		shouldBreak := false
 		for _, oneYoutubeVid := range youtubeResponse.Items {
 			if ytIdMap[oneYoutubeVid.ID.VideoID] {
+				shouldBreak = true
 				continue
 			}
 
@@ -212,8 +214,12 @@ func main() {
 			return
 		}
 
+		if shouldBreak {
+			// logrus.Infof("Remaining page fully added %v", currentPage)
+			// return
+		}
+
 		logrus.Infof("Next page token: %v\n", youtubeResponse.NextPageToken)
 		nextPageToken = youtubeResponse.NextPageToken
 	}
-
 }
