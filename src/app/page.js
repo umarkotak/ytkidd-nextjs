@@ -52,7 +52,7 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-x-5 gap-y-8">
         {videoList.map((oneVideo) => (
           <VideoCard
             key={oneVideo.video_id}
@@ -61,7 +61,7 @@ export default function Home() {
             videoImageUrl={oneVideo.video_image_url}
             channelId={oneVideo.channel_id}
             creatorImageUrl={oneVideo.creator_image_url}
-            shortedVideoTitle={oneVideo.shorted_video_title}
+            shortedVideoTitle={oneVideo.video_title}
             creatorName={oneVideo.creator_name}
             viewedCounts={oneVideo.GetViewedCount(oneVideo.video_id)}
             watchedDurations={oneVideo.GetWatchedDuration(oneVideo.video_id)}

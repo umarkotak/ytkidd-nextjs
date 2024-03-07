@@ -2,12 +2,14 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import YouTube from 'react-youtube'
+import YouTube, { YouTubeProps } from 'react-youtube'
 import Link from 'next/link'
 import {Img} from 'react-image'
+import ReactPlayer from 'react-player'
 
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
+import VideoQuiz from '@/components/VideoQuiz'
 
 var limit = 20
 var allVideoShuffled = []
@@ -23,6 +25,8 @@ export default function Watch() {
   const [videoPlayerHeight, setVideoPlayerHeight] = useState(0)
   const [mobileMode, setMobileMode] = useState(true)
   const [smallWebMode, setSmallWebMode] = useState(true)
+  const [ytVideoID, setYtVideoID] = useState("")
+  const [playerReady, setPlayerReady] = useState(false)
 
   useEffect(() => {
     if (typeof(window) === "undefined") { return }
@@ -64,7 +68,10 @@ export default function Watch() {
     const resizeObserver = new ResizeObserver(() => {
       if (!videoPlayerDivRef.current) return
       var res = Math.floor(videoPlayerDivRef.current.offsetWidth / (16 / 9))
-      setVideoPlayerHeight(res)
+      console.log(playerReady, res)
+      // if (playerReady) {
+        setVideoPlayerHeight(res)
+      // }
     })
     resizeObserver.observe(videoPlayerDivRef.current)
     return () => resizeObserver.disconnect() // clean up
@@ -115,10 +122,14 @@ export default function Watch() {
     ticker()
   }, [])
 
+  const [quizTs, setQuizTs] = useState(Date.now())
+
   useEffect(() => {
     if (!searchParams.get('ytkidd_id')) {
       return
     }
+
+    setYtVideoID(searchParams.get('v'))
 
     limit = 20
     allVideoShuffled = [...Utils.ShuffleArray(allVideo)]
@@ -134,6 +145,8 @@ export default function Watch() {
     if (typeof(selectedVidObj) === "undefined") { return }
 
     setSelectedVideo(selectedVidObj)
+
+    setQuizTs(Date.now())
   }, [searchParams])
 
   useEffect(() => {
@@ -196,26 +209,43 @@ export default function Watch() {
     return `w-full`
   }
 
+  const onPlayerReady = (event) => {
+    // access to player in all event handlers via event.target
+    // event.target.pauseVideo();
+    console.log("PLAYER READY")
+    setPlayerReady(true)
+  }
+
   return (
     <main className={`pb-[100px] ${mobileMode ? "" : "m-6"}`}>
+      {/* <VideoQuiz ts={quizTs} /> */}
+
       <div className={pageModeClass(mobileMode, smallWebMode)}>
         <div className='w-full mr-4 mb-4'>
           <div ref={videoPlayerDivRef} id="video-content" className={videoContainerClass(mobileMode, smallWebMode)}>
-            <div className='relative'>
+            <div className={`relative overflow-hidden shadow-md ${mobileMode ? "" : "rounded-xl"}`}>
               <YouTube
                 id="video-player"
-                videoId={searchParams.get('v')}
+                videoId={ytVideoID}
                 opts={{
                   height: `${videoPlayerHeight}`,
                   width: '100%',
                   playerVars: {
                     // https://developers.google.com/youtube/player_parameters
-                    autoplay: 1,
+                    // autoplay: 1,
                   },
                 }}
                 onPlay={()=>{setBlockVideoRecomm(false)}}
                 onEnd={()=>{setBlockVideoRecomm(true)}}
+                onReady={onPlayerReady}
               />
+              {/* <div style={{height: `${videoPlayerHeight}px`}}>
+                <ReactPlayer
+                  url={`https://www.youtube.com/watch?v=${ytVideoID}`}
+                  width="100%"
+                  height="100%"
+                />
+              </div> */}
               <div
                 className='absolute right-[55px] bottom-0 w-28 rounded h-8 bg-red-100 bg-opacity-0'
               ></div>
@@ -257,7 +287,7 @@ export default function Watch() {
             </div>
           </div>
         </div>
-        <div id="suggestion-content" className={`${mobileMode ? "" : "min-w-[402px]"}`}>
+        <div id="suggestion-content" className={`${mobileMode || smallWebMode ? "" : "min-w-[402px] max-w-[402px]"}`}>
           {videoList.map((oneVideo)=>(
             <div className='mb-5 flex' key={`${oneVideo.ytkidd_id}-${Math.random() * 100000}`}>
               <div className='flex-none w-[168px] h-[94px]'>
@@ -273,8 +303,8 @@ export default function Watch() {
                 <div className='w-full ml-2 flex flex-col'>
                   <Link
                     href={`/watch?ytkidd_id=${oneVideo.ytkidd_id}&v=${oneVideo.video_id}`}
-                    className="font-medium text-md text-gray-900 leading-5"
-                  >{oneVideo.shorted_video_title}</Link>
+                    className="font-medium text-sm text-gray-900 leading-5 line-clamp-3 tracking-tight"
+                  >{oneVideo.video_title}</Link>
                   <span className="flex text-sm text-gray-800 mt-1 items-center">
                     <Link href={`/channel?channel_id=${oneVideo.channel_id}`} className="flex-none mr-2 w-7 h-7 rounded-full">
                       <Img
@@ -285,7 +315,7 @@ export default function Watch() {
                     </Link>
                     <span className='flex-auto'>{oneVideo.creator_name}</span>
                   </span>
-                  <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount(oneVideo.video_id)}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration(oneVideo.video_id)} mins watched</span>
+                  {/* <span className="text-xs mt-1 text-gray-700"><i className="fa-solid fa-eye"/> {oneVideo.GetViewedCount(oneVideo.video_id)}x viewed﹒<i className="fa-solid fa-clock"/> {oneVideo.GetWatchedDuration(oneVideo.video_id)} mins watched</span> */}
                 </div>
               </div>
             </div>
