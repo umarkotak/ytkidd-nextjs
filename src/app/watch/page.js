@@ -245,11 +245,12 @@ export default function Watch() {
                 onReady={onPlayerReady}
               /> */}
               <div style={{height: `${videoPlayerHeight}px`}}>
-                <ReactPlayerCsr
+                <ReactPlayer
                   url={`https://www.youtube.com/watch?v=${ytVideoID}`}
                   width="100%"
                   height="100%"
                   playing={true}
+                  controls={true}
                 />
               </div>
               <div
