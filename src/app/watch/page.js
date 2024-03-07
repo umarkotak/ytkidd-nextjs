@@ -3,9 +3,11 @@
 import { useRef, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import YouTube, { YouTubeProps } from 'react-youtube'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import {Img} from 'react-image'
 import ReactPlayer from 'react-player'
+const ReactPlayerCsr = dynamic(() => import('@/components/ReactPlayerCsr'), { ssr: false })
 
 import YtVideo from '@/models/YtVideo'
 import Utils from '@/models/Utils'
@@ -68,10 +70,7 @@ export default function Watch() {
     const resizeObserver = new ResizeObserver(() => {
       if (!videoPlayerDivRef.current) return
       var res = Math.floor(videoPlayerDivRef.current.offsetWidth / (16 / 9))
-      console.log(playerReady, res)
-      // if (playerReady) {
-        setVideoPlayerHeight(res)
-      // }
+      setVideoPlayerHeight(res)
     })
     resizeObserver.observe(videoPlayerDivRef.current)
     return () => resizeObserver.disconnect() // clean up
@@ -83,7 +82,11 @@ export default function Watch() {
   const [allVideo, setAllVideo] = useState([])
   const [blockVideoRecomm, setBlockVideoRecomm] = useState(false)
 
+  var isFetching = false
   useEffect(() => {
+    if (isFetching) { return }
+    isFetching = true
+
     fetch('/data/db.json').then((response) => response.json()).then((json) => {
       var tmpAllVideo = []
       json.forEach((v) => {
@@ -115,6 +118,8 @@ export default function Watch() {
       selectedVidObj.IncreaseViewCount(searchParams.get('v'))
       setSelectedVideo(selectedVidObj)
     })
+
+    isFetching = false
 
     initialTime = Math.floor(Date.now() / 1000)
     totalElapsedSeconds = 0
@@ -212,23 +217,23 @@ export default function Watch() {
   const onPlayerReady = (event) => {
     // access to player in all event handlers via event.target
     // event.target.pauseVideo();
-    console.log("PLAYER READY")
     setPlayerReady(true)
   }
 
   return (
-    <main className={`pb-[100px] ${mobileMode ? "" : "m-6"}`}>
+    <main className={`pb-[100px] ${mobileMode ? "" : "mx-6 my-4"}`}>
       {/* <VideoQuiz ts={quizTs} /> */}
 
       <div className={pageModeClass(mobileMode, smallWebMode)}>
         <div className='w-full mr-4 mb-4'>
           <div ref={videoPlayerDivRef} id="video-content" className={videoContainerClass(mobileMode, smallWebMode)}>
             <div className={`relative overflow-hidden shadow-md ${mobileMode ? "" : "rounded-xl"}`}>
-              <YouTube
+              {/* <YouTube
                 id="video-player"
                 videoId={ytVideoID}
                 opts={{
                   height: `${videoPlayerHeight}`,
+                  // height: `250`,
                   width: '100%',
                   playerVars: {
                     // https://developers.google.com/youtube/player_parameters
@@ -238,14 +243,15 @@ export default function Watch() {
                 onPlay={()=>{setBlockVideoRecomm(false)}}
                 onEnd={()=>{setBlockVideoRecomm(true)}}
                 onReady={onPlayerReady}
-              />
-              {/* <div style={{height: `${videoPlayerHeight}px`}}>
-                <ReactPlayer
+              /> */}
+              <div style={{height: `${videoPlayerHeight}px`}}>
+                <ReactPlayerCsr
                   url={`https://www.youtube.com/watch?v=${ytVideoID}`}
                   width="100%"
                   height="100%"
+                  playing={true}
                 />
-              </div> */}
+              </div>
               <div
                 className='absolute right-[55px] bottom-0 w-28 rounded h-8 bg-red-100 bg-opacity-0'
               ></div>
@@ -266,7 +272,7 @@ export default function Watch() {
           <div className={`flex justify-between items-center mt-2 ${mobileMode ? "mx-2" : ""}`}>
             <div className='flex items-center mr-2'>
               <Link href={`/channel?channel_id=${selectedVideo.channel_id}`} className='flex-none'>
-                <Img src={[selectedVideo.creator_image_url, selectedVideo.creator_image_url]} alt="Avatar" className="min-h-10 min-w-10 max-h-10 max-w-10 rounded-full" />
+                <Img src={[selectedVideo.creator_image_url]} alt="Avatar" className="min-h-10 min-w-10 max-h-10 max-w-10 rounded-full" />
               </Link>
               <span className='text-sm font-semibold text-gray-800 ml-4'>{selectedVideo.creator_name}</span>
             </div>
