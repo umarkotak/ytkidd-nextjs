@@ -127,7 +127,7 @@ export default function Watch() {
     ticker()
   }, [])
 
-  const [quizTs, setQuizTs] = useState(Date.now())
+  const [quizTs, setQuizTs] = useState(0)
 
   useEffect(() => {
     if (!searchParams.get('ytkidd_id')) {
@@ -222,7 +222,7 @@ export default function Watch() {
 
   return (
     <main className={`pb-[100px] ${mobileMode ? "" : "mx-6 my-4"}`}>
-      {/* <VideoQuiz ts={quizTs} /> */}
+      <VideoQuiz ts={quizTs} />
 
       <div className={pageModeClass(mobileMode, smallWebMode)}>
         <div className='w-full mr-4 mb-4'>
@@ -245,11 +245,11 @@ export default function Watch() {
                 onReady={onPlayerReady}
               /> */}
               <div style={{height: `${videoPlayerHeight}px`}}>
-                <ReactPlayer
+                <ReactPlayerCsr
                   url={`https://www.youtube.com/watch?v=${ytVideoID}`}
                   width="100%"
                   height="100%"
-                  playing={true}
+                  playing={false}
                   controls={true}
                 />
               </div>

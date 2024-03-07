@@ -7,11 +7,58 @@ export default function VideoQuiz({
   ts
 }) {
   const [show, setShow] = useState(true)
-  const [selectedAnswer, setSelectedAnswer] = useState(null)
+  const [selectedAnswerIdx, setSelectedAnswerIdx] = useState(null)
+  const [activeQuizzes, setActiveQuizzes] = useState([])
+  const [quizCurrIndex, setQuizCurrIndex] = useState(0)
 
   useEffect(() => {
+
+  },[])
+
+  useEffect(() => {
+    setSelectedAnswerIdx(null)
+    setActiveQuizzes(quizzes)
+    setQuizCurrIndex(0)
+
     setShow(true)
   },[ts])
+
+  function answerClick(idx) {
+    setSelectedAnswerIdx(idx)
+
+    speakText(activeQuizzes[quizCurrIndex].answers[idx].value)
+  }
+
+  function submitAnswer() {
+    var tmpActiveQuiz = activeQuizzes[quizCurrIndex]
+
+    if (tmpActiveQuiz.question_type === "match_word_and_voice") {
+      if (tmpActiveQuiz.question.value === tmpActiveQuiz.answers[selectedAnswerIdx].value) {
+        speakText("JAWABANMU BENAR!")
+
+        if (quizCurrIndex == activeQuizzes.length-1) {
+          setShow(false)
+        }
+
+        setQuizCurrIndex(quizCurrIndex+1)
+      } else {
+        speakText("JAWABANMU SALAH!")
+      }
+    }
+  }
+
+  function speakText(message) {
+    if (!('speechSynthesis' in window)) { return }
+
+    let speakData = new SpeechSynthesisUtterance()
+    speakData.volume = 1
+    speakData.rate = 0.7
+    speakData.pitch = 1
+    speakData.text = message
+    speakData.lang = 'id-ID'
+
+    speechSynthesis.speak(speakData)
+  }
 
   return (
     <div className={`${show ? "block" : "hidden"}`}>
@@ -29,30 +76,34 @@ export default function VideoQuiz({
 
         <div>
           <div id="box_title" className='flex justify-center text-lg mt-8'>
-            {quizzes[0].question_message}
+            {activeQuizzes[quizCurrIndex]?.question_message}
           </div>
           <div id="box_question" className='flex justify-center text-lg mt-28'>
-            <span className='text-[100px] font-bold'>{quizzes[0].question.value}</span>
+            <span className='text-[100px] ' style={{fontFamily: "'Muli', sans-serif"}}>
+              {activeQuizzes[quizCurrIndex]?.question.value}
+            </span>
           </div>
           <div id="box_answer" className='grid grid-cols-2 mt-20 p-3 gap-4'>
-            {quizzes[0].answers.map((v, idx)=>(
+            {activeQuizzes[quizCurrIndex]?.answers.map((v, idx)=>(
               <button
-                className={`w-full p-2 rounded-lg hover:bg-blue-400 ${selectedAnswer == idx ? "bg-blue-500" : "bg-blue-300"}`}
-                onClick={(e)=>{
-                  setSelectedAnswer(idx)
-                }}
+                className={`w-full p-2 rounded-lg hover:bg-green-300 ${selectedAnswerIdx == idx ? "bg-green-400" : "bg-blue-300"}`}
+                onClick={(e)=>{answerClick(idx)}}
+                key={idx}
               >
                 {v.display}
               </button>
             ))}
           </div>
           {/* <div id="box_active_answer">
-            {selectedAnswer && <>
-              {selectedAnswer}
+            {selectedAnswerIdx && <>
+              {selectedAnswerIdx}
             </>}
           </div> */}
           <div id="box_submit" className='flex justify-end p-3'>
-            <button className='p-3 rounded-lg bg-green-300 hover:bg-green-400'>
+            <button
+              className='p-3 rounded-lg bg-green-300 hover:bg-green-400'
+              onClick={()=>submitAnswer()}
+            >
               <i className="fa-solid fa-check mr-2"></i> JAWAB
             </button>
           </div>
@@ -68,29 +119,27 @@ var quizzes = [
     question_message: "Pilih mana suara yang tepat",
     answer_type: "multiple_choice",
     question: {
-      value: "BA BA"
+      value: "ba ba"
     },
     answers: [
-      {
-        value: "BA BA",
-        display: "1",
-        is_answer: true,
-      },
-      {
-        value: "CA CA",
-        display: "2",
-        is_answer: false,
-      },
-      {
-        value: "DA DA",
-        display: "3",
-        is_answer: false,
-      },
-      {
-        value: "FA FA",
-        display: "4",
-        is_answer: false,
-      },
+      { value: "ba ba", display: "1", },
+      { value: "ca ca", display: "2", },
+      { value: "da da", display: "3", },
+      { value: "fa fa", display: "4", },
     ],
-  }
+  },
+  {
+    question_type: "match_word_and_voice",
+    question_message: "Pilih mana suara yang tepat",
+    answer_type: "multiple_choice",
+    question: {
+      value: "ca ca"
+    },
+    answers: [
+      { value: "ya ya", display: "1", },
+      { value: "ca ca", display: "2", },
+      { value: "da da", display: "3", },
+      { value: "fa fa", display: "4", },
+    ],
+  },
 ]
