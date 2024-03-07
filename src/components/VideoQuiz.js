@@ -17,7 +17,7 @@ export default function VideoQuiz({
 
   useEffect(() => {
     setSelectedAnswerIdx(null)
-    setActiveQuizzes(quizzes)
+    setActiveQuizzes(generateMatchWordAndVoiceQuizzes(3))
     setQuizCurrIndex(0)
 
     setShow(true)
@@ -71,7 +71,7 @@ export default function VideoQuiz({
           <button
             className='py-2 px-3 bg-red-400 rounded-md hover:bg-red-500'
             onClick={()=>{setShow(false)}}
-          >X</button>
+          >{quizCurrIndex+1}/{activeQuizzes.length}</button>
         </div>
 
         <div>
@@ -90,7 +90,7 @@ export default function VideoQuiz({
                 onClick={(e)=>{answerClick(idx)}}
                 key={idx}
               >
-                {v.display}
+                {idx+1}
               </button>
             ))}
           </div>
@@ -111,6 +111,43 @@ export default function VideoQuiz({
       </div>
     </div>
   )
+}
+
+var wordList = [
+  "a ba", "ba ba", "ca ca", "da da", "fa da", "ka ka",
+]
+
+var letterNonVoc = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"]
+// var letterVoc = ["a", "i", "u", "e", "o"]
+var letterVoc = ["a"]
+
+function generateMatchWordAndVoiceQuizzes(numQuizz) {
+  var generatedQuizzes = []
+
+  for (let index = 1; index <= numQuizz; index++) {
+    // var qVal = pickRandom(wordList)
+    var qVal = generateRandomWord()
+
+    var tmpQuestion = {
+      question_type: "match_word_and_voice",
+      question_message: "Pilih mana suara yang tepat",
+      answer_type: "multiple_choice",
+      question: {
+        value: qVal
+      },
+      answers: [
+        { value: qVal, display: "1", },
+        { value: generateRandomWord(), display: "2", },
+        { value: generateRandomWord(), display: "3", },
+        { value: generateRandomWord(), display: "4", },
+      ],
+    }
+
+    tmpQuestion.answers = shuffleArray(tmpQuestion.answers)
+    generatedQuizzes.push(tmpQuestion)
+  }
+
+  return generatedQuizzes
 }
 
 var quizzes = [
@@ -143,3 +180,39 @@ var quizzes = [
     ],
   },
 ]
+
+function pickRandom(array) {
+  // Check if the array is empty
+  if (array.length === 0) {
+    return null;
+  }
+
+  // Generate a random index within the range of the array's length
+  const randomIndex = Math.floor(Math.random() * array.length);
+
+  // Return the element at the random index
+  return array[randomIndex];
+}
+
+function shuffleArray(array) {
+  // Create a copy of the array to avoid modifying the original
+  const shuffledArray = [...array];
+
+  // Iterate over the array
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    // Generate a random index within the range of the array's length
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+
+    // Swap the element at the current index with the element at the random index
+    const temp = shuffledArray[i];
+    shuffledArray[i] = shuffledArray[randomIndex];
+    shuffledArray[randomIndex] = temp;
+  }
+
+  // Return the shuffled array
+  return shuffledArray;
+}
+
+function generateRandomWord() {
+  return `${pickRandom(letterNonVoc)}${pickRandom(letterVoc)} ${pickRandom(letterNonVoc)}${pickRandom(letterVoc)}`
+}
