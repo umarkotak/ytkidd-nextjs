@@ -91,6 +91,26 @@ export default class YtVideo {
     return videoStat
   }
 
+  GetCurrentDailyLocalVideoStat() {
+    var key = `YTKIDD:DAILY_VIDEO_STAT:${this.GetCurrentDate()}`
+
+    var videoStat = {
+      "total_watch_duration": 0,
+      "view_count": 0,
+      "latest_watched_at_unix": 0
+    }
+
+    if (typeof(localStorage) === "undefined") {return {}}
+
+    if (localStorage.getItem(key)) {
+      videoStat = JSON.parse(localStorage.getItem(key))
+    } else {
+      localStorage.setItem(key, JSON.stringify(videoStat))
+    }
+
+    return videoStat
+  }
+
   GetViewedCount(videoID) {
     var selectedVideoID = this.video_id
     if (videoID !== "") {

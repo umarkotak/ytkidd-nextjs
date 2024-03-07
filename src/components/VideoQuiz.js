@@ -1,5 +1,6 @@
 'use client'
 
+import YtVideo from '@/models/YtVideo'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -16,8 +17,19 @@ export default function VideoQuiz({
   },[])
 
   useEffect(() => {
+    var ytVideo = new YtVideo({})
+
+    var t = Math.floor(ytVideo.GetCurrentDailyLocalVideoStat()["total_watch_duration"] / 30)
+    if (t >= 15) {
+      t = 15
+    }
+    if (t <= 1) {
+      t = 3
+    }
+
     setSelectedAnswerIdx(null)
-    setActiveQuizzes(generateMatchWordAndVoiceQuizzes(3))
+    // setActiveQuizzes(generateMatchWordAndVoiceQuizzes(3))
+    setActiveQuizzes(generateMatchWordAndVoiceQuizzes(t))
     setQuizCurrIndex(0)
 
     setShow(true)
