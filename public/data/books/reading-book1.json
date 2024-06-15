@@ -1,0 +1,44 @@
+[
+  {
+    "id": "hal-1-ba-ca",
+    "name": "hal 1 - ba ca",
+    "mode": "default",
+    "left_contents": ["a ba", "a a", "a ba", "ba ba", "ba a", "ba ca", "ca ba"],
+    "right_contents": ["ca ca", "a ca", "ba ca", "ca ca", "ca ba", "ca a", "ba ca"],
+    "last_contents": ["a ba", "ca ba", "ca ca", "ca ba"]
+  },
+  {
+    "id": "hal-2-da-fa",
+    "name": "hal 2 - da fa",
+    "mode": "default",
+    "left_contents": ["da da", "da da", "a da", "da ba", "ca da", "ba da", "da ca"],
+    "right_contents": ["fa fa", "fa fa", "da fa", "a fa", "ca fa", "fa da", "ba fa"],
+    "last_contents": ["a ba", "ca ba", "ca ca", "da da", "fa fa"]
+  },
+  {
+    "id": "hal-11",
+    "name": "hal 11 - a",
+    "mode": "default",
+    "left_contents": [],
+    "right_contents": [],
+    "central_contents": [
+      ["mama", "bawa", "lada"],
+      ["caca", "baca", "naga"],
+      ["nama", "sapa", "dana"],
+      ["kata", "rawa", "jawa"],
+      ["nana", "bawa", "jala"],
+      ["ada", "laba", "laba"],
+      ["dara", "bawa", "kaca"],
+      ["para", "raja", "kaya"]
+    ],
+    "last_contents": []
+  },
+  {
+    "id": "hal-999",
+    "name": "hal 999",
+    "mode": "default",
+    "left_contents": [],
+    "right_contents": [],
+    "last_contents": []
+  }
+]
