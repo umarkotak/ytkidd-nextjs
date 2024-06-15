@@ -10,13 +10,17 @@
   },
   "dependencies": {
     "@cronitorio/cronitor-rum-nextjs": "^0.4.0",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/default-layout": "^3.12.0",
     "lucide-react": "^0.395.0",
     "next": "14.2.4",
+    "pdfjs-dist": "^3.4.120",
     "react": "^18",
     "react-documents": "^1.2.1",
     "react-dom": "^18",
     "react-hls-player": "^3.0.7",
     "react-image": "^4.1.0",
+    "react-pdf-viewer": "^0.1.0",
     "react-player": "^2.16.0",
     "react-youtube": "^10.1.0",
     "recharts": "^2.12.7"
