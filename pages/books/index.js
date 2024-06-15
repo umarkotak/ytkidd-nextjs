@@ -1,18 +1,40 @@
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+
 export default function Books() {
+  const [bookList, setBookList] = useState([])
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    GetBookList()
+  }, [])
+
+  async function GetBookList() {
+    fetch('/data/pdf_books.json').then((response) => response.json()).then((json) => {
+      setBookList(json)
+    })
+  }
+
   return(
     <main className="pb-[100px] p-4">
-      <div className="flex">
-        <div>
-          <img
-            className="flex-none w-full max-w-sm"
-            src="https://static.buku.kemdikbud.go.id/content/image/covernonteks/coverpusbuk/Sepatu_Cover.png"
-          />
-        </div>
+      <div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-5 gap-y-8">
+          {bookList.map((oneBook) => (<>
+            <Link href={`/books/read?book_title=${oneBook.title}`}>
+              <div className="flex flex-col border p-1 shadow-sm rounded-lg">
+                <img
+                  className="flex-none w-full"
+                  src={oneBook.cover_url}
+                />
 
-        {/* <iframe
-          className="min-h-screen w-full"
-          src="https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Sepatu.pdf#toolbar=0"
-        /> */}
+                <div>
+                  <p className="text-lg">{oneBook.title}</p>
+                </div>
+              </div>
+            </Link>
+          </>))}
+        </div>
       </div>
     </main>
   )
