@@ -21,7 +21,7 @@ export default function Books() {
     if (!searchParams) { return }
 
     bookList.forEach((oneBook) => {
-      if (oneBook.title.toLowerCase() === `${searchParams.get("book_title")}`.toLowerCase()) {
+      if (oneBook.slug.toLowerCase() === `${searchParams.get("slug")}`.toLowerCase()) {
         setActiveBook(oneBook)
       }
     })
@@ -33,19 +33,21 @@ export default function Books() {
     })
   }
 
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  // const defaultLayoutPluginInstance = defaultLayoutPlugin({
+  //   sidebarTabs: (defaultTabs) => [],
+  // });
 
   return(
     <main className="pb-[100px] p-4">
       {
-        activeBook.book_url &&
+        activeBook.attachment &&
         <div className="w-full max-w-[1024px] mx-auto">
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.js">
             <div>
               <Viewer
-                fileUrl={activeBook.book_url}
+                fileUrl={activeBook.attachment}
                 defaultScale={SpecialZoomLevel.PageWidth}
-                plugins={[defaultLayoutPluginInstance]}
+                // plugins={[defaultLayoutPluginInstance]}
               />
             </div>
           </Worker>
