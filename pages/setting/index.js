@@ -1,5 +1,3 @@
-
-
 import Utils from "@/models/Utils";
 import { useEffect, useState } from "react";
 
@@ -9,10 +7,18 @@ export default function Setting() {
   const [val1, setVal1] = useState(0)
   const [val2, setVal2] = useState(0)
   const [lockAnswer, setLockAnswer] = useState(null)
+  const [ykiddConf, setYtkiddConf] = useState({})
 
   useEffect(()=>{
     setVal1(Utils.GetRandomNumber(1, 10))
     setVal2(Utils.GetRandomNumber(1, 10))
+
+    setYtkiddConf({
+      "YTKIDD:QUIZ:ENABLE": localStorage.getItem("YTKIDD:QUIZ:ENABLE") || "on",
+      "YTKIDD:QUIZ:SHOW_ANSWER": localStorage.getItem("YTKIDD:QUIZ:SHOW_ANSWER") || "on",
+      "YTKIDD:QUIZ:ALLOW_DISMISS": localStorage.getItem("YTKIDD:QUIZ:ALLOW_DISMISS") || "on",
+      "YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG": localStorage.getItem("YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG") || "on",
+    })
   }, [])
 
   function unclockSetting() {
@@ -43,7 +49,7 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {localStorage.getItem("YTKIDD:QUIZ:ENABLE") || "on"}
+              Status: {ykiddConf["YTKIDD:QUIZ:ENABLE"]}
             </button>
 
             <button
@@ -63,7 +69,7 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {localStorage.getItem("YTKIDD:QUIZ:SHOW_ANSWER") || "on"}
+              Status: {ykiddConf["YTKIDD:QUIZ:SHOW_ANSWER"]}
             </button>
 
             <button
@@ -83,7 +89,7 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {localStorage.getItem("YTKIDD:QUIZ:ALLOW_DISMISS") || "on"}
+              Status: {ykiddConf["YTKIDD:QUIZ:ALLOW_DISMISS"]}
             </button>
 
             <button
@@ -103,7 +109,7 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {localStorage.getItem("YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG") || "on"}
+              Status: {ykiddConf["YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG"]}
             </button>
 
             <button

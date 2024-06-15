@@ -1,5 +1,6 @@
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { DocumentViewer } from 'react-documents'
 
 export default function Books() {
   const [bookList, setBookList] = useState([])
@@ -26,11 +27,19 @@ export default function Books() {
 
   return(
     <main className="pb-[100px] p-4">
-      <div>
-        <iframe
+      <div className="min-h-screen">
+        <DocumentViewer
+          queryParams="hl=En"
+          url={activeBook.book_url}
+          viewer={"pdf"}
+          className="h-full min-h-screen w-full"
+        >
+        </DocumentViewer>
+
+        {/* <iframe
           className="min-h-screen w-full"
           src={activeBook.book_url}
-        />
+        /> */}
       </div>
     </main>
   )
