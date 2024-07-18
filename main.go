@@ -130,6 +130,7 @@ func SynchAllChannelsVideo() {
 
 		time.Sleep(2 * time.Second)
 
+		// Use this break only if you want to update the first creator in the creator.json
 		// break
 	}
 }
