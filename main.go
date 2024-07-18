@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	maxPage              = 1
+	maxPage              = 20
 	videosDataFilePath   = "public/data/db.json"
 	creatorsDataFilePath = "public/data/creator.json"
 )
@@ -131,7 +131,7 @@ func SynchAllChannelsVideo() {
 		time.Sleep(2 * time.Second)
 
 		// Use this break only if you want to update the first creator in the creator.json
-		// break
+		break
 	}
 }
 
@@ -165,12 +165,14 @@ func ScrapCreator(ctx context.Context, creator Creator, mode string) error {
 				return err
 			}
 
+			pageToken = nextPage.PageToken
+
 			shouldBreak := false
 
 			for _, oneVideoData := range videoDatas {
 				if allVideosDataMap[oneVideoData.VideoID] {
 					logrus.Infof("Breaking on: %s\n", oneVideoData.VideoID)
-					shouldBreak = true
+					// shouldBreak = true
 					continue
 				}
 
@@ -182,6 +184,7 @@ func ScrapCreator(ctx context.Context, creator Creator, mode string) error {
 			}
 
 			if nextPage.PageToken == "" {
+				logrus.Infof("Break empty page token\n")
 				break
 			}
 
@@ -240,6 +243,9 @@ func getYoutubeVideos(ctx context.Context, params GetYoutubeVideoParams) ([]Vide
 			})
 		}
 	}
+
+	// respBody, _ := response.MarshalJSON()
+	// logrus.Infof("YOUTUBE RESPONSE: %+v", string(respBody))
 
 	return videoDatas, NextPage{
 		PageToken: response.NextPageToken,

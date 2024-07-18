@@ -32,7 +32,7 @@ export default function VideoCard({
         </div>
         <Link href={`/watch?ytkidd_id=${ytkiddId}&v=${videoId}`}>
           <div className="flex flex-col w-full ml-1 pr-2 hover:scale-105 transition duration-500">
-            <span className="font-medium text-md text-gray-900 break-words tracking-tight line-clamp-2">
+            <span className="font-medium text-sm text-gray-900 break-words tracking-tight line-clamp-2">
               {shortedVideoTitle}
             </span>
             <span className="text-sm break-words">{creatorName}</span>
