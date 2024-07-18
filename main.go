@@ -130,7 +130,7 @@ func SynchAllChannelsVideo() {
 
 		time.Sleep(2 * time.Second)
 
-		break
+		// break
 	}
 }
 
