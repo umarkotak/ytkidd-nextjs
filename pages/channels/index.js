@@ -29,7 +29,7 @@ export default function Channels() {
         <h1 className="text-xl">Channel List</h1>
         <small>you can enable or disable channel into your needs</small>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-x-5 gap-y-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-x-5 gap-y-8">
         {channelList.map((oneChannel) => (
           <div
             key={oneChannel.channel_id}

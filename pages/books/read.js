@@ -1,12 +1,9 @@
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { DocumentViewer } from 'react-documents'
-
-import { Viewer, Worker, SpecialZoomLevel } from '@react-pdf-viewer/core';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import dynamic from 'next/dynamic';
+const PDFViewer = dynamic(() => import('@/components/PdfViewer'), {
+  ssr: false
+});
 
 export default function Books() {
   const [bookList, setBookList] = useState([])
@@ -41,16 +38,8 @@ export default function Books() {
     <main className="pb-[100px] p-4">
       {
         activeBook.attachment &&
-        <div className="w-full max-w-[1024px] mx-auto">
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.js">
-            <div>
-              <Viewer
-                fileUrl={activeBook.attachment}
-                defaultScale={SpecialZoomLevel.PageWidth}
-                // plugins={[defaultLayoutPluginInstance]}
-              />
-            </div>
-          </Worker>
+        <div className="w-full mx-auto">
+          <PDFViewer pdfUrl={activeBook.attachment} />
         </div>
       }
     </main>
