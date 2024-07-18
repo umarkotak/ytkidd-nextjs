@@ -1,18 +1,30 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
-	"fmt"
 	"io"
-	"net/http"
+	"log"
 	"os"
-	"strings"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/api/option"
+	"google.golang.org/api/youtube/v3"
+)
+
+const (
+	maxPage              = 1
+	videosDataFilePath   = "public/data/db.json"
+	creatorsDataFilePath = "public/data/creator.json"
 )
 
 type (
+	Config struct {
+		YtKey string
+	}
+
 	VideoData struct {
 		ChannelID       string `json:"channel_id"`
 		YtkiddID        string `json:"ytkidd_id"`
@@ -75,158 +87,230 @@ type (
 			} `json:"snippet"`
 		} `json:"items"`
 	}
+
+	GetYoutubeVideoParams struct {
+		Creator   Creator
+		Query     string
+		PageToken string
+	}
+
+	NextPage struct {
+		PageToken string
+	}
+)
+
+var (
+	config = Config{}
 )
 
 func main() {
-	fmt.Printf("START SCRAPING YOUTUBE DATA!\n")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	creatorJsonFile, err := os.Open("public/data/creator.json")
+	config = Config{
+		YtKey: os.Getenv("YT_API_KEY"),
+	}
+
+	SynchAllChannelsVideo()
+}
+
+func SynchAllChannelsVideo() {
+	ctx := context.Background()
+
+	creators, err := getCreatorsData()
 	if err != nil {
 		logrus.Error(err)
 		return
+	}
+
+	for _, creator := range creators {
+		ScrapCreator(ctx, creator, "sync_until_latest")
+
+		time.Sleep(2 * time.Second)
+
+		break
+	}
+}
+
+func ScrapCreator(ctx context.Context, creator Creator, mode string) error {
+	allVideosData, allVideosDataMap, err := getVideosData()
+	if err != nil {
+		logrus.WithContext(ctx).Error(err)
+		return err
+	}
+
+	if mode == "first_time" {
+		// TODO: Implement logic
+
+	} else if mode == "sync_until_latest" {
+		pageToken := ""
+
+		newVideoData := []VideoData{}
+
+		for i := 1; i <= maxPage; i++ {
+			videoDatas, nextPage, err := getYoutubeVideos(ctx, GetYoutubeVideoParams{
+				Creator:   creator,
+				Query:     "",
+				PageToken: pageToken,
+			})
+			if err != nil {
+				logrus.WithContext(ctx).WithFields(logrus.Fields{
+					"iteration":  i,
+					"page_token": pageToken,
+					"channel_id": creator.ChannelId,
+				}).Error(err)
+				return err
+			}
+
+			shouldBreak := false
+
+			for _, oneVideoData := range videoDatas {
+				if allVideosDataMap[oneVideoData.VideoID] {
+					logrus.Infof("Breaking on: %s\n", oneVideoData.VideoID)
+					shouldBreak = true
+					continue
+				}
+
+				newVideoData = append(newVideoData, oneVideoData)
+			}
+
+			if shouldBreak {
+				break
+			}
+
+			if nextPage.PageToken == "" {
+				break
+			}
+
+			time.Sleep(2 * time.Second)
+		}
+
+		allSyncedVideosData := append(allVideosData, newVideoData...)
+
+		err = saveAllVideosData(allSyncedVideosData)
+		if err != nil {
+			logrus.WithContext(ctx).Error(err)
+			return err
+		}
+	}
+
+	return nil
+}
+
+func getYoutubeVideos(ctx context.Context, params GetYoutubeVideoParams) ([]VideoData, NextPage, error) {
+	youtubeService, err := youtube.NewService(ctx, option.WithAPIKey(config.YtKey))
+	if err != nil {
+		logrus.WithContext(ctx).Error(err)
+		return []VideoData{}, NextPage{}, err
+	}
+
+	call := youtubeService.Search.List([]string{"id", "snippet"})
+	call = call.ChannelId(params.Creator.ChannelId)
+	call = call.Q(params.Query)
+	call = call.Type("video")
+	call = call.PageToken(params.PageToken)
+	call = call.MaxResults(50) // Get up to 50 results
+
+	videoDatas := []VideoData{}
+
+	response, err := call.Do()
+	if err != nil {
+		logrus.WithContext(ctx).Error(err)
+		return []VideoData{}, NextPage{}, err
+	}
+
+	for _, item := range response.Items {
+		if item.Id.Kind == "youtube#video" {
+			logrus.Infof("Video Title: %s\n", item.Snippet.Title)
+			logrus.Infof("Video ID: %s\n", item.Id.VideoId)
+			logrus.Infof("------------------------------------\n")
+
+			videoDatas = append(videoDatas, VideoData{
+				ChannelID:       params.Creator.ChannelId,
+				YtkiddID:        item.Id.VideoId,
+				VideoID:         item.Id.VideoId,
+				VideoTitle:      item.Snippet.Title,
+				VideoImageURL:   item.Snippet.Thumbnails.Medium.Url,
+				CreatorName:     params.Creator.ChannelName,
+				CreatorImageURL: params.Creator.ChannelImageUrl,
+				StringTags:      params.Creator.StringTags,
+			})
+		}
+	}
+
+	return videoDatas, NextPage{
+		PageToken: response.NextPageToken,
+	}, nil
+}
+
+func getCreatorsData() ([]Creator, error) {
+	creatorJsonFile, err := os.Open(creatorsDataFilePath)
+	if err != nil {
+		logrus.Error(err)
+		return []Creator{}, err
 	}
 	defer creatorJsonFile.Close()
 
 	creatorByteValue, err := io.ReadAll(creatorJsonFile)
 	if err != nil {
 		logrus.Error(err)
-		return
+		return []Creator{}, err
 	}
 
 	creators := []Creator{}
 	err = json.Unmarshal(creatorByteValue, &creators)
 	if err != nil {
 		logrus.Error(err)
-		return
+		return []Creator{}, err
 	}
 
-	// CONFIGURATION
-	selectedCreator := creators[0]
-	logrus.Infof("START SCRAPPING %v CHANNEL", selectedCreator.ChannelName)
-	nextPageToken := ""
-	pageCount := 20
+	return creators, nil
+}
 
-	for currentPage := 1; currentPage <= pageCount; currentPage++ {
-		youtubeApi := "https://www.googleapis.com/youtube/v3/search?"
-		params := []string{
-			// fmt.Sprintf("key=%s", os.Getenv("YT_API_KEY")),
-			fmt.Sprintf("channelId=%s", selectedCreator.ChannelId),
-			"part=snippet,id",
-			"order=date",
-			"maxResults=50",
-		}
+func getVideosData() ([]VideoData, map[string]bool, error) {
+	videoDataMap := map[string]bool{}
 
-		if nextPageToken != "" {
-			params = append(params, fmt.Sprintf("pageToken=%v", nextPageToken))
-		}
-
-		finalUrl := fmt.Sprintf("%v%v", youtubeApi, strings.Join(params, "&"))
-		logrus.Infof("%s", finalUrl)
-
-		client := &http.Client{}
-		req, err := http.NewRequest("GET", finalUrl, nil)
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-
-		logrus.Infof("Calling: %v", finalUrl)
-		res, err := client.Do(req)
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-		defer res.Body.Close()
-
-		body, err := io.ReadAll(res.Body)
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-
-		if res.StatusCode != 200 {
-			logrus.WithFields(logrus.Fields{
-				"body": string(body),
-			}).Error(res.StatusCode)
-			return
-		}
-
-		youtubeResponse := YoutubeResponse{}
-		err = json.Unmarshal(body, &youtubeResponse)
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-
-		jsonFile, err := os.Open("public/data/db.json")
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-		defer jsonFile.Close()
-
-		byteValue, err := io.ReadAll(jsonFile)
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-
-		ytIdMap := map[string]bool{}
-
-		dbVid := []VideoData{}
-		err = json.Unmarshal(byteValue, &dbVid)
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-
-		for _, oneDbVid := range dbVid {
-			ytIdMap[oneDbVid.VideoID] = true
-		}
-
-		shouldBreak := false
-		for _, oneYoutubeVid := range youtubeResponse.Items {
-			if ytIdMap[oneYoutubeVid.ID.VideoID] {
-				shouldBreak = true
-				continue
-			}
-
-			dbVid = append(dbVid, VideoData{
-				ChannelID:       selectedCreator.ChannelId,
-				YtkiddID:        fmt.Sprintf("%v", len(dbVid)),
-				VideoID:         oneYoutubeVid.ID.VideoID,
-				VideoTitle:      oneYoutubeVid.Snippet.Title,
-				VideoImageURL:   oneYoutubeVid.Snippet.Thumbnails.Medium.URL,
-				CreatorName:     oneYoutubeVid.Snippet.ChannelTitle,
-				CreatorImageURL: selectedCreator.ChannelImageUrl,
-				StringTags:      selectedCreator.StringTags,
-			})
-			ytIdMap[oneYoutubeVid.ID.VideoID] = true
-		}
-
-		resByte, err := json.MarshalIndent(dbVid, "", "    ")
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-
-		err = os.WriteFile("public/data/db.json", resByte, 0644)
-		if err != nil {
-			logrus.Error(err)
-			return
-		}
-
-		if youtubeResponse.NextPageToken == "" {
-			logrus.Infof("Last page reached %v", currentPage)
-			return
-		}
-
-		if shouldBreak {
-			// logrus.Infof("Remaining page fully added %v", currentPage)
-			// return
-		}
-
-		logrus.Infof("Next page token: %v\n", youtubeResponse.NextPageToken)
-		nextPageToken = youtubeResponse.NextPageToken
+	jsonFile, err := os.Open(videosDataFilePath)
+	if err != nil {
+		logrus.Error(err)
+		return []VideoData{}, videoDataMap, err
 	}
+	defer jsonFile.Close()
+
+	byteValue, err := io.ReadAll(jsonFile)
+	if err != nil {
+		logrus.Error(err)
+		return []VideoData{}, videoDataMap, err
+	}
+
+	allVideoData := []VideoData{}
+	err = json.Unmarshal(byteValue, &allVideoData)
+	if err != nil {
+		logrus.Error(err)
+		return []VideoData{}, videoDataMap, err
+	}
+
+	for _, oneDbVid := range allVideoData {
+		videoDataMap[oneDbVid.VideoID] = true
+	}
+
+	return allVideoData, videoDataMap, nil
+}
+
+func saveAllVideosData(videosData []VideoData) error {
+	resByte, err := json.MarshalIndent(videosData, "", "    ")
+	if err != nil {
+		logrus.Error(err)
+		return err
+	}
+
+	err = os.WriteFile(videosDataFilePath, resByte, 0644)
+	if err != nil {
+		logrus.Error(err)
+		return err
+	}
+
+	return nil
 }
