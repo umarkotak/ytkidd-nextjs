@@ -11,7 +11,8 @@ export default function App({ Component, pageProps }) {
 
       <div className="mt-[64px] flex">
         <Sidebar />
-        <div id="content-section" className="ml-[200px] w-full overflow-hidden">
+        {/* <div id="content-section" className="ml-[200px] w-full overflow-hidden"> */}
+        <div id="content-section" className="ml-[200px] w-full">
           <Component {...pageProps} />
         </div>
       </div>
