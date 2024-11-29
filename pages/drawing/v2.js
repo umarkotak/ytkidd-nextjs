@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 export default function DrawingApp() {
   const [tool, setTool] = useState('draw')
   const [color, setColor] = useState('#000000')
-  const [brushSize, setBrushSize] = useState(3)
+  const [brushSize, setBrushSize] = useState(2)
   const [imageUrls, setImageUrls] = useState([
     "https://i.pinimg.com/736x/7d/ea/8d/7dea8d9ba7771ab5755637aba144d636.jpg",
     "https://i.pinimg.com/736x/1f/04/c7/1f04c76f0025524c953ae90f3cf8d3fc.jpg",
@@ -109,7 +109,13 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
   // Drawing functions
   const startDrawing = (e) => {
     if (!tool) return
+    
+    // Prevent default to stop scrolling
     e.preventDefault()
+    
+    // Stop propagation to prevent parent element scrolling
+    e.stopPropagation()
+    
     const { x, y } = getCoordinates(e)
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
     
@@ -134,9 +140,14 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
 
   const draw = (e) => {
     if (!tool || !isDrawing) return
-    const { x, y } = getCoordinates(e)
     
+    // Prevent default to stop scrolling
     e.preventDefault()
+    
+    // Stop propagation to prevent parent element scrolling
+    e.stopPropagation()
+    
+    const { x, y } = getCoordinates(e)
     
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
     
@@ -144,11 +155,42 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
     drawingCtx.stroke()
   }
 
-  const stopDrawing = () => {
+  const stopDrawing = (e) => {
+    // Prevent default to stop scrolling
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    
     setIsDrawing(false)
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
     drawingCtx.closePath()
   }
+
+  // Effect to add passive event listeners and prevent scrolling
+  useEffect(() => {
+    const canvas = drawingCanvasRef.current
+
+    // Passive event listeners for touch events
+    const touchStartOptions = { passive: false }
+    const touchMoveOptions = { passive: false }
+
+    // Prevent default touch behavior
+    const preventScroll = (e) => {
+      if (tool) {
+        e.preventDefault()
+      }
+    }
+
+    canvas.addEventListener('touchstart', preventScroll, touchStartOptions)
+    canvas.addEventListener('touchmove', preventScroll, touchMoveOptions)
+
+    // Cleanup listeners
+    return () => {
+      canvas.removeEventListener('touchstart', preventScroll)
+      canvas.removeEventListener('touchmove', preventScroll)
+    }
+  }, [tool])
 
   // Initial setup of canvases
   useEffect(() => {
@@ -188,7 +230,7 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
         </button>
       </div>
       <div 
-        className="relative" 
+        className="relative touch-none mx-auto" // Added touch-none to prevent default touch behaviors
         style={{ 
           width: canvasSize.width, 
           height: canvasSize.height 
@@ -197,7 +239,7 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
         {/* Base image canvas (bottom layer) */}
         <canvas
           ref={imageCanvasRef}
-          className="absolute top-0 left-0 pointer-events-none"
+          className="absolute top-0 left-0 pointer-events-none border rounded-xl border-black"
           style={{ zIndex: 1 }}
         />
 
@@ -205,7 +247,7 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
         <canvas
           ref={drawingCanvasRef}
           className="absolute top-0 left-0"
-          style={{ zIndex: 3, cursor: "crosshair" }}
+          style={{ zIndex: 2, cursor: "crosshair" }}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
