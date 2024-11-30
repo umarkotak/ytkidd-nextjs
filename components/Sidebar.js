@@ -18,13 +18,13 @@ export default function Sidebar() {
       }
 
       if (window.innerWidth <= 470) {
-        element.classList.remove("ml-[200px]")
+        element.classList.remove("pl-[200px]")
         element.classList.add("mobile-mode")
       } else if (element.classList.contains("mobile-mode")) {
         element.classList.remove("mobile-mode")
         var sideElement = document.getElementById("sidebar")
         if (!sideElement.classList.contains("hidden")) {
-          element.classList.add("ml-[200px]")
+          element.classList.add("pl-[200px]")
         }
       }
     }
@@ -41,10 +41,10 @@ export default function Sidebar() {
 
     if (window.innerWidth <= 470 || pathname === "/watch") {
       sideElement.classList.add("hidden")
-      element.classList.remove("ml-[200px]")
+      element.classList.remove("pl-[200px]")
     } else {
       sideElement.classList.remove("hidden")
-      element.classList.add("ml-[200px]")
+      element.classList.add("pl-[200px]")
     }
   }, [pathname])
 
@@ -71,7 +71,7 @@ export default function Sidebar() {
           </div>
         </Link>
         <Link href="/drawing">
-          <div className={`px-5 py-2 ${pathname === "/books" ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${pathname === "/drawing" ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
             <Pencil size={18} /><span className="ml-2">Drawing</span>
           </div>
         </Link>

@@ -227,8 +227,8 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
       setCanvasSize({ width, height })
 
       // Draw image on image canvas
-      const imageCtx = imageCanvas.getContext('2d')
-      imageCtx.drawImage(img, 0, 0)
+      // const imageCtx = imageCanvas.getContext('2d')
+      // imageCtx.drawImage(img, 0, 0)
     }
   }, [imageUrl])
 
@@ -242,7 +242,7 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
           <FileIcon size={16} className='mr-2' /> Clear
         </button>
       </div>
-      <div 
+      <div
         className="relative touch-none mx-auto w-full border rounded-b-lg overflow-hidden" // Added touch-none to prevent default touch behaviors
       >
         {/* Base image canvas (bottom layer) */}
@@ -253,13 +253,14 @@ function DrawingCanvas({ imageUrl, tool, color, brushSize }) {
         />
 
         <img
+          className='border rounded-lg w-full border-black'
           src={imageUrl}
         />
 
         {/* Drawing canvas (top layer) */}
         <canvas
           ref={drawingCanvasRef}
-          className="absolute top-0 left-0 block"
+          className="absolute top-0 left-0 block w-full"
           style={{ zIndex: 2, cursor: "crosshair" }}
           onMouseDown={startDrawing}
           onMouseMove={draw}

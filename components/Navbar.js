@@ -34,11 +34,11 @@ export default function Navbar() {
 
     if (window.innerWidth <= 470) {
       var element = document.getElementById("content-section")
-      element.classList.remove("ml-[200px]")
+      element.classList.remove("pl-[200px]")
       element.classList.add("mobile-mode")
     } else {
       var element = document.getElementById("content-section")
-      element.classList.toggle("ml-[200px]")
+      element.classList.toggle("pl-[200px]")
     }
   }
 
