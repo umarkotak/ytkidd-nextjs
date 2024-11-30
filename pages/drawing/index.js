@@ -3,8 +3,8 @@ import { useState, useRef, useEffect } from 'react'
 
 export default function DrawingApp() {
   const [tool, setTool] = useState('draw')
-  const [color, setColor] = useState('#000000')
-  const [brushSize, setBrushSize] = useState(2)
+  const [color, setColor] = useState('#ff0000')
+  const [brushSize, setBrushSize] = useState(3)
   const [imageUrls, setImageUrls] = useState([
     "https://iili.io/2lQbwla.md.jpg",
     "https://iili.io/2lQbjKg.md.jpg",
@@ -20,51 +20,45 @@ export default function DrawingApp() {
 
   return (
     <div className="pb-[100px] p-4 flex flex-col items-center justify-center">
-      <div className='max-w-[720px]'>
+      <div className='w-full max-w-[720px]'>
         <div className='flex w-full justify-start'>
           <h1 className="text-2xl">Children Worksheet</h1>
         </div>
 
-        <div className="mt-2 sticky top-16 z-40 flex flex-wrap items-center gap-4 bg-zinc-100 border p-2 rounded-lg w-full">
-          <div className="flex items-center space-x-2">
-            <label>Tools:</label>
-            <button
-              onClick={() => setTool('draw')}
-              className={`p-2 border rounded-lg flex items-center ${tool === 'draw' ? 'bg-blue-200' : 'bg-white'}`}
-            >
-              <Pencil size={16} className='mr-2' /> Draw
-            </button>
-            <button
-              onClick={() => setTool('erase')}
-              className={`p-2 border rounded-lg flex items-center ${tool === 'erase' ? 'bg-blue-200' : 'bg-white'}`}
-            >
-              <Eraser size={16} className='mr-2' /> Eraser
-            </button>
-          </div>
+        <div className="mt-2 sticky top-16 z-40 flex flex-wrap items-center gap-2 bg-zinc-100 border p-1 rounded-lg w-full">
+          <button
+            onClick={() => setTool('draw')}
+            className={`px-2 py-1 border rounded-lg flex items-center ${tool === 'draw' ? 'bg-blue-200' : 'bg-white'}`}
+          >
+            <Pencil size={16} className='mr-2' /> Draw
+          </button>
+          <button
+            onClick={() => setTool('erase')}
+            className={`px-2 py-1 border rounded-lg flex items-center ${tool === 'erase' ? 'bg-blue-200' : 'bg-white'}`}
+          >
+            <Eraser size={16} className='mr-2' /> Eraser
+          </button>
 
           {tool === 'draw' && (
-            <div className="flex items-center space-x-2">
-              <label>Color:</label>
-              <input
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="h-10 w-14 rounded-lg"
-              />
-            </div>
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="h-10 w-14"
+            />
           )}
 
           <div className="flex items-center space-x-2">
             <label>Brush Size:</label>
             <input
-              type="range"
+              type="number"
+              id="brushSize"
+              className="w-16 px-2 py-1 border rounded-md"
               min="1"
               max="50"
               value={brushSize}
-              onChange={(e) => setBrushSize(Number(e.target.value))}
-              className="w-32"
+              onChange={(e) => setBrushSize(parseInt(e.target.value, 10))}
             />
-            <span>{brushSize}</span>
           </div>
         </div>
 
