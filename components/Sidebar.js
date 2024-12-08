@@ -39,7 +39,7 @@ export default function Sidebar() {
     var sideElement = document.getElementById("sidebar")
     var element = document.getElementById("content-section")
 
-    if (window.innerWidth <= 470 || pathname === "/watch") {
+    if (window.innerWidth <= 470 || `${pathname}`.startsWith("/watch")) {
       sideElement.classList.add("hidden")
       element.classList.remove("pl-[200px]")
     } else {
@@ -48,45 +48,41 @@ export default function Sidebar() {
     }
   }, [pathname])
 
-  function DecideContentSectionMargin() {
-
-  }
-
   return (
     <div id="sidebar" className={`fixed z-50 bg-white border-r-2 border-gray-200 text-black h-screen w-[200px]`}>
       <div className="flex flex-col py-2">
         <Link href="/">
-          <div className={`px-5 py-2 ${pathname === "/" ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${pathname === "/" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Home size={18} /><span className="ml-2">Home</span>
           </div>
         </Link>
         <Link href="/channels">
-          <div className={`px-5 py-2 ${pathname === "/channels" ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${`${pathname}`.startsWith("/channels") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <UserCheck size={18} /><span className="ml-2">Channels</span>
           </div>
         </Link>
         <Link href="/books">
-          <div className={`px-5 py-2 ${pathname === "/books" ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${pathname === "/books" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Book size={18} /><span className="ml-2">Books</span>
           </div>
         </Link>
         <Link href="/drawing">
-          <div className={`px-5 py-2 ${pathname === "/drawing" ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${pathname === "/drawing" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Pencil size={18} /><span className="ml-2">Drawing</span>
           </div>
         </Link>
         <Link href="/learn">
-          <div className={`px-5 py-2 ${pathname.startsWith("/learn") ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${`${pathname}`.startsWith("/learn") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <School size={18} /><span className="ml-2">Learn</span>
           </div>
         </Link>
         <Link href="/stats">
-          <div className={`px-5 py-2 ${pathname.startsWith("/stats") ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${`${pathname}`.startsWith("/stats") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <BarChart2 size={18} /><span className="ml-2">Stats</span>
           </div>
         </Link>
         <Link href="/setting">
-          <div className={`px-5 py-2 ${pathname.startsWith("/setting") ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 flex items-center`}>
+          <div className={`px-5 py-2 ${`${pathname}`.startsWith("/setting") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Settings size={18} /><span className="ml-2">Setting</span>
           </div>
         </Link>

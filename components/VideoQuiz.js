@@ -2,6 +2,7 @@
 
 import Utils from '@/models/Utils'
 import YtVideo from '@/models/YtVideo'
+import { SettingsIcon, XIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -101,21 +102,23 @@ export default function VideoQuiz({
       <div className='fixed top-6 left-0 right-0 mx-auto rounded-lg overflow-hidden bg-white h-4/5 max-w-lg w-full z-30'>
         <div className='flex justify-between p-2 items-center bg-red-100'>
           <div className='flex'>
-            <Link href="/">
-              <div className='p-2 rounded-md border border-black mr-2'>
-                <i className="fa-solid fa-house w-[24px]"/><span className="">Home</span>
-              </div>
-            </Link>
-            <button
-              className='py-2 px-3 rounded-md border border-black'
-            >
-              [{quizCurrIndex+1}/{activeQuizzes.length}] Quiz Time!
+            <button className='py-2 px-3 rounded-md border border-black'>
+              Waktunya Quiz!!!
             </button>
           </div>
-          {allowDismiss && <button
-            className='py-2 px-3 bg-red-400 rounded-md hover:bg-red-500'
-            onClick={()=>{setShow(false)}}
-          >X</button>}
+          {allowDismiss &&
+            <div className='flex gap-2'>
+              <Link href="/setting">
+                <button
+                  className='p-2 bg-blue-400 rounded-md hover:bg-blue-500 w-10'
+                ><SettingsIcon /></button>
+              </Link>
+              <button
+                className='p-2 bg-red-400 rounded-md hover:bg-red-500 w-10'
+                onClick={()=>{setShow(false)}}
+              ><XIcon /></button>
+            </div>
+          }
         </div>
 
         <div>
@@ -139,12 +142,10 @@ export default function VideoQuiz({
               </button>
             ))}
           </div>
-          {/* <div id="box_active_answer">
-            {selectedAnswerIdx && <>
-              {selectedAnswerIdx}
-            </>}
-          </div> */}
-          <div id="box_submit" className='flex justify-end p-3'>
+          <div id="box_submit" className='flex justify-between items-center p-3'>
+            <div className='text-lg'>
+              Pertanyaan <span className='font-bold'>{quizCurrIndex+1}</span> Dari {activeQuizzes.length}
+            </div>
             <button
               className='p-3 rounded-lg bg-green-300 hover:bg-green-400'
               onClick={()=>submitAnswer()}

@@ -65,27 +65,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="w-1/2">
-        <div className="relative flex items-center">
-          <div className="w-full">
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full border border-gray-400 rounded-full px-4 py-2 focus:outline-none focus:ring focus:border-blue-300 text-gray-600 placeholder-gray-400"
-              onFocus={() => (!keywordSearch ? router.push('/search') : () => {})}
-              onChange={(e) => setKeyword(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <button
-              className="ml-[-55px] py-2 px-4 hover:bg-gray-100 rounded-full"
-              onClick={() => onSearch()}
-            >
-              <i className="fa-solid fa-magnifying-glass" />
-            </button>
-          </div>
-        </div>
-      </div>
-
       <div>
         <img src="/images/youtube.png" alt="Avatar" className="h-8 w-8 rounded-full" />
       </div>
