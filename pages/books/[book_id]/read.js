@@ -20,7 +20,9 @@ export default function Read() {
   useEffect(() => {
     tmpBookDetail = {}
     tmpMaxPageNumber = 0
+  }, [])
 
+  useEffect(() => {
     setImageLoading(true)
     GetBookDetail(router.query.book_id)
   }, [router])
@@ -38,12 +40,12 @@ export default function Read() {
 
     if (!tmpBookDetail.contents[pageIndex] || !tmpBookDetail.contents[pageIndex].image_file_url) { return }
     setActivePage(tmpBookDetail.contents[pageIndex])
-  }, [searchParams, bookDetail])
+  }, [router, bookDetail])
 
   async function GetBookDetail(bookID) {
     if (!bookID) { return }
 
-    if (bookDetail.id === bookID) { return }
+    if (bookDetail.id === parseInt(bookID)) { return }
 
     try {
       const response = await ytkiddAPI.GetBookDetail("", {}, {
@@ -70,6 +72,7 @@ export default function Read() {
   }
 
   function NextPage() {
+    if (activePageNumber >= tmpMaxPageNumber) { return }
     router.push({
       pathname: `/books/${router.query.book_id}/read`,
       search: `?page=${activePageNumber+1}`
@@ -77,6 +80,7 @@ export default function Read() {
   }
 
   function PrevPage() {
+    if (activePageNumber <= 1) { return }
     router.push({
       pathname: `/books/${router.query.book_id}/read`,
       search: `?page=${activePageNumber-1}`
@@ -113,7 +117,7 @@ export default function Read() {
           <span className="bg-white opacity-50"><ArrowRight /></span>
         </button>
       </div>
-      <p className="mt-2 text-center">click left or right side of the image to change page</p>
+      <p className="mt-2 text-center">{activePageNumber} / {tmpMaxPageNumber}</p>
     </main>
   )
 }
