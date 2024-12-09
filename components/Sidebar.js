@@ -62,7 +62,7 @@ export default function Sidebar() {
           </div>
         </Link>
         <Link href="/books">
-          <div className={`px-5 py-2 ${pathname === "/books" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
+          <div className={`px-5 py-2 ${`${pathname}`.startsWith("/books") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Book size={18} /><span className="ml-2">Books</span>
           </div>
         </Link>

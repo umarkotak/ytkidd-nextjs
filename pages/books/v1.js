@@ -1,4 +1,3 @@
-import ytkiddAPI from "@/apis/ytkidApi"
 import { classNames } from "@react-pdf-viewer/core"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
@@ -12,18 +11,10 @@ export default function Books() {
     GetBookList()
   }, [])
 
-  async function GetBookList(params) {
-    try {
-      const response = await ytkiddAPI.GetBooks("", {}, params)
-      const body = await response.json()
-      if (response.status !== 200) {
-        return
-      }
-
-      setBookList(body.data.books)
-    } catch (e) {
-      console.error(e)
-    }
+  async function GetBookList() {
+    fetch('/data/pdf_books.json').then((response) => response.json()).then((json) => {
+      setBookList(json)
+    })
   }
 
   return(
@@ -31,15 +22,15 @@ export default function Books() {
       <div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-x-5 gap-y-8">
           {bookList.map((oneBook) => (<>
-            <Link href={`/books/${oneBook.id}/read?page=1`} className="h-full" key={oneBook.id}>
+            <Link href={`/books/read?slug=${oneBook.slug}`} className="h-full">
               <div className="border p-1 shadow-sm rounded-lg h-full">
                 <img
-                  className="flex-none w-full h-72 object-cover z-0 rounded-lg"
-                  src={oneBook.cover_file_url}
+                  className="flex-none w-full h-72 object-cover z-0"
+                  src={oneBook.image}
                 />
 
-                <div className="m-1">
-                  <p className="bg-white text-sm text-center">{oneBook.title}</p>
+                <div className="">
+                  <p className="bg-white text-sm">{oneBook.title}</p>
                 </div>
               </div>
             </Link>

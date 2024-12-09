@@ -44,6 +44,14 @@ class YtkiddAPI {
     return this.Get(`/ytkidd/api/youtube_channels`, authToken, h, params)
   }
 
+  async GetBooks(authToken, h, params) {
+    return this.Get(`/ytkidd/api/books`, authToken, h, params)
+  }
+
+  async GetBookDetail(authToken, h, params) {
+    return this.Get(`/ytkidd/api/book/${params.book_id}`, authToken, h, params)
+  }
+
   async GetChannelDetail(authToken, h, params) {
     return this.Get(`/ytkidd/api/youtube_channel/${params.channel_id}`, authToken, h, params)
   }
