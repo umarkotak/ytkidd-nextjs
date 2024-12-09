@@ -49,8 +49,8 @@ export default function Sidebar() {
   }, [pathname])
 
   return (
-    <div id="sidebar" className={`fixed z-50 bg-white border-r-2 border-gray-200 text-black h-screen w-[200px]`}>
-      <div className="flex flex-col py-2">
+    <div id="sidebar" className={`fixed z-40 bg-white border-t-2 border-r-2 border-gray-200 text-black h-screen w-[200px]`}>
+      <div className="flex flex-col py-0">
         <Link href="/">
           <div className={`px-5 py-2 ${pathname === "/" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Home size={18} /><span className="ml-2">Home</span>

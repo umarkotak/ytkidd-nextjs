@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }) {
     <>
       <Navbar />
 
-      <div className="mt-[64px] flex">
+      <div className="mt-[46px] flex">
         <Sidebar />
         {/* <div id="content-section" className="ml-[200px] w-full overflow-hidden"> */}
         <div id="content-section" className="pl-[200px] w-full">

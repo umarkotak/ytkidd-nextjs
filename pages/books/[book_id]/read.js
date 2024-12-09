@@ -73,20 +73,24 @@ export default function Read() {
   }
 
   return(
-    <main className="p-4 w-full">
-      <div className="h-[calc(100vh-100px)] relative">
+    <main className="p-2 w-full">
+      <div className="max-h-[calc(100vh-100px)] relative">
         <img
-          className="h-full object-contain mx-auto rounded-lg"
+          className="max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg"
           src={activePage.image_file_url}
         />
         <button
-          className="absolute top-0 left-0 w-1/2 h-full bg-transparent hover:bg-black hover:opacity-5 rounded-l-lg"
+          className="absolute top-0 left-0 w-1/2 h-full bg-transparent hover:bg-black hover:bg-opacity-5 rounded-l-lg flex justify-start items-center"
           onClick={()=>PrevPage()}
-        ></button>
+        >
+          <span className="bg-white opacity-50"><ArrowLeft /></span>
+        </button>
         <button
-          className="absolute top-0 right-0 w-1/2 h-full bg-transparent hover:bg-black hover:opacity-5 rounded-r-lg"
+          className="absolute top-0 right-0 w-1/2 h-full bg-transparent hover:bg-black hover:bg-opacity-5 rounded-r-lg flex justify-end items-center"
           onClick={()=>NextPage()}
-        ></button>
+        >
+          <span className="bg-white opacity-50"><ArrowRight /></span>
+        </button>
       </div>
       <p className="mt-2 text-center">click left or right side of the image to change page</p>
     </main>

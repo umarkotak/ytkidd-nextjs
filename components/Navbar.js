@@ -44,7 +44,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed z-50 top-0 border-b-2 border-gray-200 w-full bg-white px-4 flex justify-between items-center h-16"
+      className="fixed z-40 top-0 border-b-2 border-gray-300 w-full bg-white px-4 flex justify-between items-center h-12 backdrop-blur-md bg-opacity-50 shadow-sm"
       style={{ zIndex: 10 }}
     >
       <div className="flex items-center">
@@ -66,7 +66,7 @@ export default function Navbar() {
       </div>
 
       <div>
-        <img src="/images/youtube.png" alt="Avatar" className="h-8 w-8 rounded-full" />
+        <img src="https://placehold.co/200" alt="Avatar" className="h-8 w-8 rounded-full" />
       </div>
     </nav>
   )
