@@ -73,6 +73,7 @@ export default function Read() {
 
   function NextPage() {
     if (activePageNumber >= tmpMaxPageNumber) { return }
+    setImageLoading(true)
     router.push({
       pathname: `/books/${router.query.book_id}/read`,
       search: `?page=${activePageNumber+1}`
@@ -81,6 +82,7 @@ export default function Read() {
 
   function PrevPage() {
     if (activePageNumber <= 1) { return }
+    setImageLoading(true)
     router.push({
       pathname: `/books/${router.query.book_id}/read`,
       search: `?page=${activePageNumber-1}`
