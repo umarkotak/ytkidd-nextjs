@@ -15,11 +15,13 @@ export default function Read() {
   const searchParams = useSearchParams()
   const [activePage, setActivePage] = useState({})
   const [activePageNumber, setActivePageNumber] = useState(1)
+  const [imageLoading, setImageLoading] = useState(true)
 
   useEffect(() => {
     tmpBookDetail = {}
     tmpMaxPageNumber = 0
 
+    setImageLoading(true)
     GetBookDetail(router.query.book_id)
   }, [router])
 
@@ -41,6 +43,8 @@ export default function Read() {
   async function GetBookDetail(bookID) {
     if (!bookID) { return }
 
+    if (bookDetail.id === bookID) { return }
+
     try {
       const response = await ytkiddAPI.GetBookDetail("", {}, {
         book_id: bookID
@@ -53,6 +57,13 @@ export default function Read() {
       tmpBookDetail = body.data
       tmpMaxPageNumber = tmpBookDetail.contents.length
       setBookDetail(tmpBookDetail)
+
+      tmpBookDetail.contents.forEach((oneContent) => {
+        const newImage = new Image();
+        newImage.src = oneContent.image_file_url;
+        window[oneContent.image_file_url] = newImage;
+      });
+
     } catch (e) {
       console.error(e)
     }
@@ -72,13 +83,23 @@ export default function Read() {
     })
   }
 
+  function ImageLoaded() {
+    setImageLoading(false)
+  }
+
   return(
     <main className="p-2 w-full">
       <div className="max-h-[calc(100vh-100px)] relative">
         <img
           className="max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg"
           src={activePage.image_file_url}
+          onLoad={()=>ImageLoaded()}
         />
+        <div className={`absolute top-0 left-0 w-full h-full bg-black bg-opacity-10 backdrop-blur-sm ${imageLoading ? "block" : "hidden"}`}>
+          <div className="mx-auto text-center flex flex-col h-full justify-center">
+            loading...
+          </div>
+        </div>
         <button
           className="absolute top-0 left-0 w-1/2 h-full bg-transparent hover:bg-black hover:bg-opacity-5 rounded-l-lg flex justify-start items-center"
           onClick={()=>PrevPage()}
