@@ -66,21 +66,21 @@ export default function Sidebar() {
             <Book size={18} /><span className="ml-2">Books</span>
           </div>
         </Link>
-        <Link href="/drawing">
+        {/* <Link href="/drawing">
           <div className={`px-5 py-2 ${pathname === "/drawing" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Pencil size={18} /><span className="ml-2">Drawing</span>
           </div>
-        </Link>
-        <Link href="/learn">
+        </Link> */}
+        {/* <Link href="/learn">
           <div className={`px-5 py-2 ${`${pathname}`.startsWith("/learn") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <School size={18} /><span className="ml-2">Learn</span>
           </div>
-        </Link>
-        <Link href="/stats">
+        </Link> */}
+        {/* <Link href="/stats">
           <div className={`px-5 py-2 ${`${pathname}`.startsWith("/stats") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <BarChart2 size={18} /><span className="ml-2">Stats</span>
           </div>
-        </Link>
+        </Link> */}
         <Link href="/setting">
           <div className={`px-5 py-2 ${`${pathname}`.startsWith("/setting") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <Settings size={18} /><span className="ml-2">Setting</span>
