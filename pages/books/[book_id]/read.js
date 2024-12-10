@@ -1,6 +1,6 @@
 import ytkiddAPI from "@/apis/ytkidApi"
-import { classNames } from "@react-pdf-viewer/core"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { classNames, FullScreenMode } from "@react-pdf-viewer/core"
+import { ArrowLeft, ArrowRight, FullscreenIcon } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/router"
@@ -16,6 +16,7 @@ export default function Read() {
   const [activePage, setActivePage] = useState({})
   const [activePageNumber, setActivePageNumber] = useState(1)
   const [imageLoading, setImageLoading] = useState(true)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   useEffect(() => {
     tmpBookDetail = {}
@@ -89,31 +90,51 @@ export default function Read() {
     })
   }
 
+  function ToggleFullScreen() {
+    setIsFullscreen(!isFullscreen)
+  }
+
   function ImageLoaded() {
     setImageLoading(false)
   }
 
   return(
     <main className="p-2 w-full">
-      <div className="max-h-[calc(100vh-100px)] relative">
+      <div
+        className={`${isFullscreen ? `
+          absolute top-0 left-0 w-full h-screen z-50 bg-white
+        ` : `
+          max-h-[calc(100vh-100px)] relative
+        `}`}
+      >
         <img
-          className="max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg"
+          className={`${isFullscreen ? `
+            object-contain absolute top-0 left-0 w-full h-screen
+          ` : `
+            max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg
+          `}`}
           src={activePage.image_file_url}
           onLoad={()=>ImageLoaded()}
         />
-        <div className={`absolute top-0 left-0 w-full h-full bg-black bg-opacity-10 backdrop-blur-sm ${imageLoading ? "block" : "hidden"}`}>
+        <div className={`absolute z-20 top-0 left-0 w-full h-full bg-black bg-opacity-10 backdrop-blur-sm ${imageLoading ? "block" : "hidden"}`}>
           <div className="mx-auto text-center flex flex-col h-full justify-center">
             loading...
           </div>
         </div>
         <button
-          className="absolute top-0 left-0 w-1/2 h-full bg-transparent hover:bg-black hover:bg-opacity-5 rounded-l-lg flex justify-start items-center"
+          className="absolute z-10 top-2 right-2 rounded-lg flex justify-start items-center hover:scale-110 bg-white bg-opacity-50 duration-500 p-2"
+          onClick={()=>ToggleFullScreen()}
+        >
+          <span className="text-black"><FullscreenIcon size={26} /></span>
+        </button>
+        <button
+          className="absolute z-0 top-0 left-0 w-1/2 h-full bg-transparent hover:bg-black hover:bg-opacity-5 rounded-l-lg flex justify-start items-center"
           onClick={()=>PrevPage()}
         >
           <span className="bg-white opacity-50"><ArrowLeft /></span>
         </button>
         <button
-          className="absolute top-0 right-0 w-1/2 h-full bg-transparent hover:bg-black hover:bg-opacity-5 rounded-r-lg flex justify-end items-center"
+          className="absolute z-0 top-0 right-0 w-1/2 h-full bg-transparent hover:bg-black hover:bg-opacity-5 rounded-r-lg flex justify-end items-center"
           onClick={()=>NextPage()}
         >
           <span className="bg-white opacity-50"><ArrowRight /></span>
