@@ -1,6 +1,6 @@
 import ytkiddAPI from "@/apis/ytkidApi"
 import { classNames, FullScreenMode } from "@react-pdf-viewer/core"
-import { ArrowLeft, ArrowRight, FileIcon, FullscreenIcon } from "lucide-react"
+import { ArrowLeft, ArrowRight, Eraser, FileIcon, FullscreenIcon, MenuIcon, PencilIcon } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/router"
@@ -22,6 +22,7 @@ export default function Read() {
   const [color, setColor] = useState('#ff0000')
   const [brushSize, setBrushSize] = useState(3)
   const [imageLoaded, setImageLoaded] = useState(new Date)
+  const [showTool, setShowTool] = useState(true)
 
   useEffect(() => {
     tmpBookDetail = {}
@@ -144,29 +145,66 @@ export default function Read() {
             </div>
           </div>
         </div>
-        <div className="absolute z-10 top-2 right-2 flex gap-2">
+        <div className="w-12 absolute z-10 top-2 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm py-1">
           <button
-            className="rounded-lg flex justify-start items-center hover:scale-110 bg-white bg-opacity-50 duration-500 p-2"
+            className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1`}
+            onClick={()=>setShowTool(!showTool)}
+          >
+            <span className="text-black"><MenuIcon size={18} /></span>
+          </button>
+        </div>
+        <div className={`w-12 absolute z-10 top-12 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm px-0.5 py-2 ${showTool ? "block" : "hidden"}`}>
+          <button
+            className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${tool === "draw" ? "bg-green-300" : ""}`}
+            onClick={()=>setTool("draw")}
+          >
+            <span className="text-black"><PencilIcon size={18} /></span>
+          </button>
+          <input
+            type="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            className="w-8"
+          />
+          <input
+            type="number"
+            id="brushSize"
+            className="border rounded-md w-full text-center"
+            min="1"
+            max="50"
+            value={brushSize}
+            onChange={(e) => setBrushSize(parseInt(e.target.value, 10))}
+          />
+          <button
+            className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${tool === "eraser" ? "bg-green-300" : ""}`}
+            onClick={()=>setTool("eraser")}
+          >
+            <span className="text-black"><Eraser size={18} /></span>
+          </button>
+        </div>
+        <div className="absolute z-10 top-2 right-2 flex gap-1 bg-white bg-opacity-80 rounded-full border border-black shadow-sm px-1 py-0.5">
+          <button
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
             onClick={()=>PrevPage()}
           >
-            <span className="text-black"><ArrowLeft /></span>
+            <span className="text-black"><ArrowLeft size={18} /></span>
           </button>
           <button
-            className="rounded-lg flex justify-start items-center hover:scale-110 bg-white bg-opacity-50 duration-500 p-2"
+            className="rounded-lg flex justify-start items-center p-1"
           >
-            <span className="text-black">{activePageNumber} / {tmpMaxPageNumber}</span>
+            <span className="text-black text-[14px]">{activePageNumber} / {tmpMaxPageNumber}</span>
           </button>
           <button
-            className="rounded-lg flex justify-start items-center hover:scale-110 bg-white bg-opacity-50 duration-500 p-2"
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
             onClick={()=>NextPage()}
           >
-            <span className="text-black"><ArrowRight /></span>
+            <span className="text-black"><ArrowRight size={18} /></span>
           </button>
           <button
-            className="rounded-lg flex justify-start items-center hover:scale-110 bg-white bg-opacity-50 duration-500 p-2"
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
             onClick={()=>ToggleFullScreen()}
           >
-            <span className="text-black"><FullscreenIcon size={26} /></span>
+            <span className="text-black"><FullscreenIcon size={18} /></span>
           </button>
         </div>
       </div>
@@ -211,16 +249,16 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
   // Drawing functions
   const startDrawing = (e) => {
     if (!tool) return
-    
+
     // Prevent default to stop scrolling
     e.preventDefault()
-    
+
     // Stop propagation to prevent parent element scrolling
     e.stopPropagation()
-    
+
     const { x, y } = getCoordinates(e)
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
-    
+
     // Configure context based on tool
     if (tool === 'draw') {
       drawingCtx.globalCompositeOperation = 'source-over'
@@ -242,17 +280,17 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
 
   const draw = (e) => {
     if (!tool || !isDrawing) return
-    
+
     // Prevent default to stop scrolling
     e.preventDefault()
-    
+
     // Stop propagation to prevent parent element scrolling
     e.stopPropagation()
-    
+
     const { x, y } = getCoordinates(e)
-    
+
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
-    
+
     drawingCtx.lineTo(x, y)
     drawingCtx.stroke()
   }
@@ -263,7 +301,7 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
       e.preventDefault()
       e.stopPropagation()
     }
-    
+
     setIsDrawing(false)
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
     drawingCtx.closePath()

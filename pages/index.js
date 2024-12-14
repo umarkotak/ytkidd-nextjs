@@ -5,6 +5,7 @@ import VideoCard from '@/components/VideoCard'
 
 import ytkiddAPI from '@/apis/ytkidApi'
 import Utils from '@/models/Utils'
+import { useSearchParams } from 'next/navigation'
 
 var videoIDs = []
 var page = 1
@@ -14,6 +15,7 @@ var tmpVideoList = []
 export default function Home() {
   const [videoList, setVideoList] = useState([])
   const [channelList, setChannelList] = useState([])
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     videoIDs = []
@@ -24,7 +26,7 @@ export default function Home() {
       exclude_ids: videoIDs.join(",")
     })
     GetChannelList({})
-  }, [])
+  }, [searchParams])
 
   async function GetVideoList(params) {
     try {

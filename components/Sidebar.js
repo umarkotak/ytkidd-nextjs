@@ -100,11 +100,11 @@ export default function Sidebar() {
 function SidebarItem({currPathname, icon, text, targetPath, mode}) {
   if (mode === "equal") {
     return(
-      <Link href={targetPath}>
+      <a href={targetPath}>
         <div className={`px-5 py-2 ${`${currPathname}` === targetPath ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
           {icon}<span className="ml-2">{text}</span>
         </div>
-      </Link>
+      </a>
     )
   }
 
