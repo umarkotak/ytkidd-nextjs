@@ -3,6 +3,7 @@ class YtkiddAPI {
     if (typeof(window) !== "undefined" && window.location.protocol === "https:") {
       this.Host = "https://ytkidd-api-m4.cloudflare-avatar-id-1.site"
     } else {
+      this.Host = "https://ytkidd-api-m4.cloudflare-avatar-id-1.site"
       this.Host = "http://localhost:33000"
     }
   }

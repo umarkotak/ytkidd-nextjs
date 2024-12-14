@@ -61,11 +61,11 @@ export default function Read() {
       tmpMaxPageNumber = tmpBookDetail.contents.length
       setBookDetail(tmpBookDetail)
 
-      tmpBookDetail.contents.forEach((oneContent) => {
+      for(const oneContent of tmpBookDetail.contents) {
         const newImage = new Image();
         newImage.src = oneContent.image_file_url;
         window[oneContent.image_file_url] = newImage;
-      });
+      }
 
     } catch (e) {
       console.error(e)
@@ -117,10 +117,17 @@ export default function Read() {
           onLoad={()=>ImageLoaded()}
         />
         <div className={`absolute z-20 top-0 left-0 w-full h-full bg-black bg-opacity-10 backdrop-blur-sm ${imageLoading ? "block" : "hidden"}`}>
-          <div className="mx-auto text-center flex flex-col h-full justify-center">
-            loading...
+          <div className="mx-auto text-center text-xl flex flex-col h-full justify-center">
+            <div>
+              <span className="bg-white py-1 px-2 rounded-lg">Loading...</span>
+            </div>
           </div>
         </div>
+        <button
+          className="absolute z-10 top-2 right-14 rounded-lg flex justify-start items-center hover:scale-110 bg-white bg-opacity-50 duration-500 p-2"
+        >
+          <span className="text-black">{activePageNumber} / {tmpMaxPageNumber}</span>
+        </button>
         <button
           className="absolute z-10 top-2 right-2 rounded-lg flex justify-start items-center hover:scale-110 bg-white bg-opacity-50 duration-500 p-2"
           onClick={()=>ToggleFullScreen()}
@@ -140,7 +147,6 @@ export default function Read() {
           <span className="bg-white opacity-50"><ArrowRight /></span>
         </button>
       </div>
-      <p className="mt-2 text-center">{activePageNumber} / {tmpMaxPageNumber}</p>
     </main>
   )
 }

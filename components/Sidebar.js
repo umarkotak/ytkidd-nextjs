@@ -51,26 +51,10 @@ export default function Sidebar() {
   return (
     <div id="sidebar" className={`fixed z-40 bg-white border-t-2 border-r-2 border-gray-200 text-black h-screen w-[200px]`}>
       <div className="flex flex-col py-0">
-        <Link href="/">
-          <div className={`px-5 py-2 ${pathname === "/" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
-            <Home size={18} /><span className="ml-2">Home</span>
-          </div>
-        </Link>
-        <Link href="/channels">
-          <div className={`px-5 py-2 ${`${pathname}`.startsWith("/channels") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
-            <UserCheck size={18} /><span className="ml-2">Channels</span>
-          </div>
-        </Link>
-        <Link href="/books">
-          <div className={`px-5 py-2 ${`${pathname}`.startsWith("/books") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
-            <Book size={18} /><span className="ml-2">Books</span>
-          </div>
-        </Link>
-        {/* <Link href="/drawing">
-          <div className={`px-5 py-2 ${pathname === "/drawing" ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
-            <Pencil size={18} /><span className="ml-2">Drawing</span>
-          </div>
-        </Link> */}
+        <SidebarItem currPathname={pathname} icon={<Home size={18} />} text="Home" targetPath="/" mode="equal" />
+        <SidebarItem currPathname={pathname} icon={<UserCheck size={18} />} text={"Channels"} targetPath={"/channels"} />
+        <SidebarItem currPathname={pathname} icon={<Book size={18} />} text={"Books"} targetPath={"/books"} />
+        <SidebarItem currPathname={pathname} icon={<Pencil size={18} />} text={"Workbooks"} targetPath={"/workbooks"} />
         {/* <Link href="/learn">
           <div className={`px-5 py-2 ${`${pathname}`.startsWith("/learn") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <School size={18} /><span className="ml-2">Learn</span>
@@ -110,5 +94,25 @@ export default function Sidebar() {
         </span>
       </div>
     </div>
+  )
+}
+
+function SidebarItem({currPathname, icon, text, targetPath, mode}) {
+  if (mode === "equal") {
+    return(
+      <Link href={targetPath}>
+        <div className={`px-5 py-2 ${`${currPathname}` === targetPath ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
+          {icon}<span className="ml-2">{text}</span>
+        </div>
+      </Link>
+    )
+  }
+
+  return(
+    <Link href={targetPath}>
+      <div className={`px-5 py-2 ${`${currPathname}`.startsWith(targetPath) ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
+        {icon}<span className="ml-2">{text}</span>
+      </div>
+    </Link>
   )
 }

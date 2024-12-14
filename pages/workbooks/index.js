@@ -14,7 +14,7 @@ export default function Books() {
 
   async function GetBookList(params) {
     try {
-      params.types = "default"
+      params.types = "workbook"
       const response = await ytkiddAPI.GetBooks("", {}, params)
       const body = await response.json()
       if (response.status !== 200) {
@@ -32,7 +32,7 @@ export default function Books() {
       <div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-x-5 gap-y-8">
           {bookList.map((oneBook) => (
-            <Link href={`/books/${oneBook.id}/read?page=1`} className="h-full" key={oneBook.id}>
+            <Link href={`/workbooks/${oneBook.id}/read?page=1`} className="h-full" key={oneBook.id}>
               <div className="border p-1 shadow-sm rounded-lg h-full">
                 <img
                   className="flex-none w-full h-72 object-cover z-0 rounded-lg hover:scale-105 transition duration-500"

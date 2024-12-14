@@ -1,226 +1,394 @@
 [
   {
       "title": "Luna's Red Seeds",
+      "slug": "luna-s-red-seeds",
+      "img_format": "jpeg",
+      "custom_image_slug": "luna-s-red-seeds",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Biji_Merah_Luna_Ing.pdf"
   },
   {
       "title": "Kimu's Cake",
+      "slug": "kimu-s-cake",
+      "img_format": "jpeg",
+      "custom_image_slug": "kimu-s-cake",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Kue_Kimu_Ing.pdf"
   },
   {
       "title": "I'm a Big Girl",
+      "slug": "i-m-a-big-girl",
+      "img_format": "jpeg",
+      "custom_image_slug": "i-m-a-big-girl",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Aku_Sudah_Besar_Ing.pdf"
   },
   {
       "title": "Mika's Cute Picture",
+      "slug": "mika-s-cute-picture",
+      "img_format": "jpeg",
+      "custom_image_slug": "mika-s-cute-picture",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Gambar_Lucu_Mika_Ing.pdf"
   },
   {
       "title": "Mother's Orchids",
+      "slug": "mother-s-orchids",
+      "img_format": "jpeg",
+      "custom_image_slug": "mother-s-orchids",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Karena_Anggrek_Ibu_Ing.pdf"
   },
   {
       "title": "What's that?",
+      "slug": "what-s-that",
+      "img_format": "jpeg",
+      "custom_image_slug": "what-s-that",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Apa_Itu_Ing.pdf"
   },
   {
       "title": "What Would Be More Exciting?",
+      "slug": "what-would-be-more-exciting",
+      "img_format": "jpeg",
+      "custom_image_slug": "what-would-be-more-exciting",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Apa_Yang_Lebih_Seru_Ing.pdf"
   },
   {
       "title": "My Name is Kali",
+      "slug": "my-name-is-kali",
+      "img_format": "jpeg",
+      "custom_image_slug": "my-name-is-kali",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Namaku_Kali_Ing.pdf"
   },
   {
       "title": "Where Did Sipet's Nuts Go?",
+      "slug": "where-did-sipet-s-nuts-go",
+      "img_format": "jpeg",
+      "custom_image_slug": "where-did-sipet-s-nuts-go",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Dimana_Kacang_Sipet_Ing.pdf"
   },
   {
       "title": "Berli and The Sea",
+      "slug": "berli-and-the-sea",
+      "img_format": "jpeg",
+      "custom_image_slug": "berli-and-the-sea",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Berli_and_The_Sea_Ing.pdf"
   },
   {
       "title": "Tootle-Too! Tootle-Too!",
+      "slug": "tootle-too-tootle-too",
+      "img_format": "jpeg",
+      "custom_image_slug": "tootle-too-tootle-too",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Tiup_Tiup_Ing.pdf"
   },
   {
       "title": "Up the Hill We Go!",
+      "slug": "up-the-hill-we-go",
+      "img_format": "jpeg",
+      "custom_image_slug": "up-the-hill-we-go",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Naik_Naik_Kepuncak_Bukit_Ing.pdf"
   },
   {
       "title": "Carrot House",
+      "slug": "carrot-house",
+      "img_format": "jpeg",
+      "custom_image_slug": "carrot-house",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Rumah_Wortel_Ing.pdf"
   },
   {
       "title": "Rescue! Rescue!",
+      "slug": "rescue-rescue",
+      "img_format": "jpeg",
+      "custom_image_slug": "rescue-rescue",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Selamatkan_Dirimu_Ing.pdf"
   },
   {
       "title": "Princess in the Forest",
+      "slug": "princess-in-the-forest",
+      "img_format": "jpeg",
+      "custom_image_slug": "princess-in-the-forest",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Putri_Didalam_Hutan_Ing.pdf"
   },
   {
       "title": "Try It First, Tora!",
+      "slug": "try-it-first-tora",
+      "img_format": "jpeg",
+      "custom_image_slug": "try-it-first-tora",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Coba_Dulu_Tora_Ing.pdf"
   },
   {
       "title": "This or That?",
+      "slug": "this-or-that",
+      "img_format": "jpeg",
+      "custom_image_slug": "this-or-that",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Ini_Atau_Itu_Ing.pdf"
   },
   {
       "title": "Later",
+      "slug": "later",
+      "img_format": "jpeg",
+      "custom_image_slug": "later",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Nanti_Saja_Ing.pdf"
   },
   {
       "title": "I Just Have To",
+      "slug": "i-just-have-to",
+      "img_format": "jpeg",
+      "custom_image_slug": "i-just-have-to",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Tidak_Bisa_Tidak_Ing.pdf"
   },
   {
       "title": "Cemong the Tipped Ear Cat",
+      "slug": "cemong-the-tipped-ear-cat",
+      "img_format": "jpeg",
+      "custom_image_slug": "cemong-the-tipped-ear-cat",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Si_Cemong_Coak_Ing.pdf"
   },
   {
       "title": "Misi Penyelamatan Artha : Panduan Sederhana Pengelolaan Keuangan Remaja",
+      "slug": "misi-penyelamatan-artha-panduan-sederhana-pengelolaan-keuangan-remaja",
+      "img_format": "jpeg",
+      "custom_image_slug": "misi-penyelamatan-artha-panduan-sederhana-pengelolaan-keuangan-remaja",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Misi_Penyelamatan_Artha.pdf"
   },
   {
       "title": "Kika dan Dominika: Kala Remaja Ingin Berbisnis",
+      "slug": "kika-dan-dominika-kala-remaja-ingin-berbisnis",
+      "img_format": "jpeg",
+      "custom_image_slug": "kika-dan-dominika-kala-remaja-ingin-berbisnis",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Kika_dan_Dominika.pdf"
   },
   {
       "title": "Begitu Saja Kok Repot",
+      "slug": "begitu-saja-kok-repot",
+      "img_format": "jpeg",
+      "custom_image_slug": "begitu-saja-kok-repot",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Begitu_Saja_Kok_Repot.pdf"
   },
   {
       "title": "Gadis Rempah",
+      "slug": "gadis-rempah",
+      "img_format": "jpeg",
+      "custom_image_slug": "gadis-rempah",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Gadis_Rempah.pdf"
   },
   {
       "title": "Jagapati Bumi",
+      "slug": "jagapati-bumi",
+      "img_format": "jpeg",
+      "custom_image_slug": "jagapati-bumi",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Jagapati_Bumi.pdf"
   },
   {
       "title": "Komik Rampai Tema Lingkungan Hidup Kesatria Bumantara & Apa Yang Ada",
+      "slug": "komik-rampai-tema-lingkungan-hidup-kesatria-bumantara-apa-yang-ada",
+      "img_format": "jpeg",
+      "custom_image_slug": "komik-rampai-tema-lingkungan-hidup-kesatria-bumantara-apa-yang-ada",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Kesatria_Bumantara.pdf"
   },
   {
       "title": "Kesatria Penjaga",
+      "slug": "kesatria-penjaga",
+      "img_format": "jpeg",
+      "custom_image_slug": "kesatria-penjaga",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Kesatria_Penjaga.pdf"
   },
   {
       "title": "Layur Tetaplah Berlayar",
+      "slug": "layur-tetaplah-berlayar",
+      "img_format": "jpeg",
+      "custom_image_slug": "layur-tetaplah-berlayar",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Layur_Tetaplah_Berlayar.pdf"
   },
   {
       "title": "Mengejar Haruto",
+      "slug": "mengejar-haruto",
+      "img_format": "jpeg",
+      "custom_image_slug": "mengejar-haruto",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Mengejar_Haruto.pdf"
   },
   {
       "title": "Misteri Drumben Tengah Malam",
+      "slug": "misteri-drumben-tengah-malam",
+      "img_format": "jpeg",
+      "custom_image_slug": "misteri-drumben-tengah-malam",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Misteri_Drumben_Tengah_Malam.pdf"
   },
   {
       "title": "Komik Rampai Tema Lingkungan Hidup 5 Pandawa & Penglipuran",
+      "slug": "komik-rampai-tema-lingkungan-hidup-5-pandawa-penglipuran",
+      "img_format": "jpeg",
+      "custom_image_slug": "komik-rampai-tema-lingkungan-hidup-5-pandawa-penglipuran",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Lima_Pandawa_Penglipuran.pdf"
   },
   {
       "title": "Sekolah untuk Timur",
+      "slug": "sekolah-untuk-timur",
+      "img_format": "jpeg",
+      "custom_image_slug": "sekolah-untuk-timur",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Sekolah_Untuk_Timur.pdf"
   },
   {
       "title": "Piring Bahagia Si dan Bi",
+      "slug": "piring-bahagia-si-dan-bi",
+      "img_format": "jpeg",
+      "custom_image_slug": "piring-bahagia-si-dan-bi",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Piring_Bahagia_Sibi.pdf"
   },
   {
       "title": "Komik Rampai: Sekilas Yami, Tantangan Sinta, Rio dan Jabrik, Aji Mumpung",
+      "slug": "komik-rampai-sekilas-yami-tantangan-sinta-rio-dan-jabrik-aji-mumpung",
+      "img_format": "jpeg",
+      "custom_image_slug": "komik-rampai-sekilas-yami-tantangan-sinta-rio-dan-jabrik-aji-mumpung",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Yami_Sinta_Rio_Aji.pdf"
   },
   {
       "title": "Komik Rampai: Vanya dan Vino, Tiara x Jerawat, Rahasia Sehat Kakek, Kembalinya Para Lemak",
+      "slug": "komik-rampai-vanya-dan-vino-tiara-x-jerawat-rahasia-sehat-kakek-kembalinya-para-lemak",
+      "img_format": "jpeg",
+      "custom_image_slug": "komik-rampai-vanya-dan-vino-tiara-x-jerawat-rahasia-sehat-kakek-kembalinya-para-lemak",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Vanya_dan_Vino.pdf"
   },
   {
       "title": "Warna-Warni Anak Ondel-Ondel",
+      "slug": "warna-warni-anak-ondel-ondel",
+      "img_format": "jpeg",
+      "custom_image_slug": "warna-warni-anak-ondel-ondel",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Warna_Warni_Anak_Ondel.pdf"
   },
   {
       "title": "Biji Merah Luna",
+      "slug": "biji-merah-luna",
+      "img_format": "jpeg",
+      "custom_image_slug": "biji-merah-luna",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Biji_Merah_Luna.pdf"
   },
   {
       "title": "Kue Kimu",
+      "slug": "kue-kimu",
+      "img_format": "jpeg",
+      "custom_image_slug": "kue-kimu",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Kue_Kimu.pdf"
   },
   {
       "title": "Aku Sudah Besar",
+      "slug": "aku-sudah-besar",
+      "img_format": "jpeg",
+      "custom_image_slug": "aku-sudah-besar",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Aku_Sudah_Besar.pdf"
   },
   {
       "title": "Gambar Lucu Mika",
+      "slug": "gambar-lucu-mika",
+      "img_format": "jpeg",
+      "custom_image_slug": "gambar-lucu-mika",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Gambar_Lucu_Mika.pdf"
   },
   {
       "title": "Karena Anggrek Ibu",
+      "slug": "karena-anggrek-ibu",
+      "img_format": "jpeg",
+      "custom_image_slug": "karena-anggrek-ibu",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Karena_Anggrek_Ibu.pdf"
   },
   {
       "title": "Apa Itu?",
+      "slug": "apa-itu",
+      "img_format": "jpeg",
+      "custom_image_slug": "apa-itu",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Apa_Itu.pdf"
   },
   {
       "title": "Apa yang lebih Seru?",
+      "slug": "apa-yang-lebih-seru",
+      "img_format": "jpeg",
+      "custom_image_slug": "apa-yang-lebih-seru",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Apa_Yang_Lebih_Seru.pdf"
   },
   {
       "title": "Namaku Kali",
+      "slug": "namaku-kali",
+      "img_format": "jpeg",
+      "custom_image_slug": "namaku-kali",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Namaku_Kali.pdf"
   },
   {
       "title": "Di Mana Kacang Sipet?",
+      "slug": "di-mana-kacang-sipet",
+      "img_format": "jpeg",
+      "custom_image_slug": "di-mana-kacang-sipet",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Dimana_Kacang_Sipet.pdf"
   },
   {
       "title": "Pilus Rumput Laut Untuk Rasi",
+      "slug": "pilus-rumput-laut-untuk-rasi",
+      "img_format": "jpeg",
+      "custom_image_slug": "pilus-rumput-laut-untuk-rasi",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Pilus_Rumput_Laut_Untuk_Rasi.pdf"
   },
   {
       "title": "Tiup-tiup",
+      "slug": "tiup-tiup",
+      "img_format": "jpeg",
+      "custom_image_slug": "tiup-tiup",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Tiup_Tiup.pdf"
   },
   {
       "title": "Naik-Naik Ke puncak Bukit",
+      "slug": "naik-naik-ke-puncak-bukit",
+      "img_format": "jpeg",
+      "custom_image_slug": "naik-naik-ke-puncak-bukit",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Naik_Naik_Kepuncak_Bukit.pdf"
   },
   {
       "title": "Rumah Wortel",
+      "slug": "rumah-wortel",
+      "img_format": "jpeg",
+      "custom_image_slug": "rumah-wortel",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Rumah_Wortel.pdf"
   },
   {
       "title": "Selamatkan Dirimu",
+      "slug": "selamatkan-dirimu",
+      "img_format": "jpeg",
+      "custom_image_slug": "selamatkan-dirimu",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Selamatkan_Dirimu.pdf"
   },
   {
       "title": "Putri Dalam Hutan",
+      "slug": "putri-dalam-hutan",
+      "img_format": "jpeg",
+      "custom_image_slug": "putri-dalam-hutan",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Putri_Didalam_Hutan.pdf"
   },
   {
       "title": "Coba Dulu Tora !",
+      "slug": "coba-dulu-tora",
+      "img_format": "jpeg",
+      "custom_image_slug": "coba-dulu-tora",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Coba_Dulu_Tora.pdf"
   },
   {
       "title": "Ini Atau Itu",
+      "slug": "ini-atau-itu",
+      "img_format": "jpeg",
+      "custom_image_slug": "ini-atau-itu",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Ini_Atau_Itu.pdf"
   },
   {
       "title": "Nanti Saja",
+      "slug": "nanti-saja",
+      "img_format": "jpeg",
+      "custom_image_slug": "nanti-saja",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Nanti_Saja.pdf"
   },
   {
       "title": "Tidak Bisa Tidak",
+      "slug": "tidak-bisa-tidak",
+      "img_format": "jpeg",
+      "custom_image_slug": "tidak-bisa-tidak",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Tidak_Bisa_Tidak.pdf"
   },
   {
       "title": "Si Cemong Coak",
+      "slug": "si-cemong-coak",
+      "img_format": "jpeg",
+      "custom_image_slug": "si-cemong-coak",
       "pdf_url": "https://static.buku.kemdikbud.go.id/content/pdf/bukunonteks/pusbuk/Si_Cemong_Coak.pdf"
   }
 ]
