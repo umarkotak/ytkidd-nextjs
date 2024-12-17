@@ -7,10 +7,17 @@ import { useEffect, useState } from "react"
 export default function Books() {
   const [bookList, setBookList] = useState([])
   const searchParams = useSearchParams()
+  const [enableDev, setEnableDev] = useState(false)
 
   useEffect(() => {
     GetBookList({})
-  }, [])
+
+    if (searchParams && searchParams.get("dev")==="true") {
+      setEnableDev(true)
+    } else {
+      setEnableDev(false)
+    }
+  }, [searchParams])
 
   async function GetBookList(params) {
     try {
@@ -39,8 +46,11 @@ export default function Books() {
                   src={oneBook.cover_file_url}
                 />
 
-                <div className="m-1">
+                <div className="m-1 flex flex-col gap-2">
                   <p className="bg-white text-sm text-center">{oneBook.title}</p>
+                  {enableDev && <div className="flex items-center justify-end">
+                    <button className="btn btn-xs bg-error">delete</button>
+                  </div>}
                 </div>
               </div>
             </Link>

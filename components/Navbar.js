@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { useSearchParams } from 'next/navigation'
 import { useCronitor } from '@cronitorio/cronitor-rum-nextjs'
-import { Menu } from 'lucide-react'
+import { LogInIcon, Menu } from 'lucide-react'
 
 export default function Navbar() {
   useCronitor('3f97b0a02f683b7af499e046f0495786', {
@@ -59,13 +59,15 @@ export default function Navbar() {
           </button>
         </div>
         <div>
-          <a href="/">
-            <h1 className="text-xl font-bold text-gray-800">YT Kidd</h1>
+          <a href="/" className='flex flex-row gap-0 items-center'>
+            <img src="/images/cookie_kid_logo_circle.png" className='w-10 h-10' />
+            <h1 className="text-xl font-bold text-gray-800">Cookie Kid</h1>
           </a>
         </div>
       </div>
 
-      <div>
+      <div className='flex gap-2 items-center'>
+        <Link href="/login" className='btn btn-sm'><LogInIcon size={14} /> login</Link>
         <img src="https://placehold.co/200" alt="Avatar" className="h-8 w-8 rounded-full" />
       </div>
     </nav>
