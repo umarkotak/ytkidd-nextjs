@@ -17,7 +17,7 @@ export default function Home() {
             <img
               src="https://ytkidd-api-m4.cloudflare-avatar-id-1.site/comfy_ui_gallery/ComfyUI_00017_.png"
               className='w-full rounded-lg shadow-sm'
-              />
+            />
             <h1 className='text-2xl flex gap-1 items-center justify-center'><BotMessageSquare size={24} /> Chat</h1>
           </div>
         </Link>
