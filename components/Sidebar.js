@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BarChart2, Book, Home, Pencil, School, Settings, UserCheck } from "lucide-react"
+import { BarChart2, Book, BotMessageSquare, Home, Pencil, School, Settings, UserCheck } from "lucide-react"
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -55,6 +55,7 @@ export default function Sidebar() {
         <SidebarItem currPathname={pathname} icon={<UserCheck size={18} />} text={"Channels"} targetPath={"/channels"} />
         <SidebarItem currPathname={pathname} icon={<Book size={18} />} text={"Books"} targetPath={"/books"} />
         <SidebarItem currPathname={pathname} icon={<Pencil size={18} />} text={"Workbooks"} targetPath={"/workbooks"} />
+        <SidebarItem currPathname={pathname} icon={<BotMessageSquare size={18} />} text={"Sahabat AI"} targetPath={"/sahabat_ai"} />
         {/* <Link href="/learn">
           <div className={`px-5 py-2 ${`${pathname}`.startsWith("/learn") ? "bg-gray-200" : "bg-white"} hover:bg-gray-300 flex items-center`}>
             <School size={18} /><span className="ml-2">Learn</span>
@@ -87,7 +88,7 @@ export default function Sidebar() {
           ﹒
         </span>
         <span className="px-5 text-xs" onClick={()=>console.log(activeMenu)}>
-          A youtube content library curated by human for kids
+          your relatively educative content library for kids
         </span>
         <span className="hidden">
           tailwind class trigger
