@@ -39,7 +39,7 @@ export default function Sidebar() {
     var sideElement = document.getElementById("sidebar")
     var element = document.getElementById("content-section")
 
-    if (window.innerWidth <= 470 || `${pathname}`.startsWith("/watch")) {
+    if (window.innerWidth <= 470 || `${pathname}`.startsWith("/watch") || `${pathname}`.startsWith("/sahabat_ai/chat")) {
       sideElement.classList.add("hidden")
       element.classList.remove("pl-[200px]")
     } else {

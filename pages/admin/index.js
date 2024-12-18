@@ -39,6 +39,7 @@ export default function Admin() {
     <main className="pb-[100px] p-4">
       <div className="flex flex-col gap-1">
         <Link href="/admin/books" className="btn">Manage Book</Link>
+        <Link href="/admin/comfy_ui/gallery" className="btn">Comfy UI Gallery</Link>
       </div>
     </main>
   )

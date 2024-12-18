@@ -4,7 +4,7 @@ class YtkiddAPI {
       this.Host = "https://ytkidd-api-m4.cloudflare-avatar-id-1.site"
     } else {
       this.Host = "https://ytkidd-api-m4.cloudflare-avatar-id-1.site"
-      this.Host = "http://localhost:33000"
+      // this.Host = "http://localhost:33000"
     }
   }
 
@@ -59,6 +59,14 @@ class YtkiddAPI {
 
   async DeleteBook(authToken, h, params) {
     return this.Delete(`/ytkidd/api/book/${params.book_id}`, authToken, h, params)
+  }
+
+  async PostAIChat(authToken, h, params) {
+    return this.Post(`/ytkidd/api/ai/chat`, authToken, h, params)
+  }
+
+  async GetComfyUIOutput(authToken, h, params) {
+    return this.Get(`/ytkidd/api/comfy_ui/output`, authToken, h, params)
   }
 
   // REUSABLE

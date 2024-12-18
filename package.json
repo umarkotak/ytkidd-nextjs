@@ -22,9 +22,11 @@
     "react-image": "^4.1.0",
     "react-pdf-viewer": "^0.1.0",
     "react-player": "^2.16.0",
+    "react-speech-recognition": "^3.10.0",
     "react-toastify": "^11.0.0",
     "react-youtube": "^10.1.0",
-    "recharts": "^2.12.7"
+    "recharts": "^2.12.7",
+    "sbd": "^1.0.19"
   },
   "devDependencies": {
     "daisyui": "^4.12.2",
