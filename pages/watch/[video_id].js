@@ -136,7 +136,7 @@ export default function Watch() {
   }
 
   function videoContainerClass(tmpMobileMode, tmpSmallWebMode) {
-    if (tmpMobileMode) { return "w-full fixed z-0 top-16" }
+    if (tmpMobileMode) { return "w-full fixed z-0 top-12" }
     if (tmpSmallWebMode) { return "w-full" }
     return "w-full"
   }

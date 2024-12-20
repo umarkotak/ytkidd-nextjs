@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react"
-import { ArrowLeft, ArrowRight, Eraser, MenuIcon, PencilIcon, Fullscreen, Trash2, FileIcon } from "lucide-react"
+import { ArrowLeft, ArrowRight, Eraser, MenuIcon, PencilIcon, Fullscreen } from "lucide-react"
 import { useRouter } from "next/router"
 import { useSearchParams } from "next/navigation"
 import ytkiddAPI from "@/apis/ytkidApi"
@@ -15,38 +15,15 @@ const DEFAULT_BRUSH_CONFIG = {
   color: '#ff0000'
 }
 
-// Custom hook for managing book state with local storage
+// Custom hook for managing book state
 const useBookReader = (bookId) => {
   const [bookState, setBookState] = useState({
     details: {},
     activePage: {},
     pageNumber: 1,
     maxPages: 0,
-    canvasStates: {} 
+    canvasStates: {} // Store canvas states for each page
   })
-
-  // Load canvas states from local storage on initial mount
-  useEffect(() => {
-    if (!bookId) return
-    
-    const storedStates = localStorage.getItem(`book_${bookId}_canvas_states`)
-    if (storedStates) {
-      setBookState(prev => ({
-        ...prev,
-        canvasStates: JSON.parse(storedStates)
-      }))
-    }
-  }, [bookId])
-
-  // Save canvas states to local storage whenever they change
-  useEffect(() => {
-    if (!bookId || !Object.keys(bookState.canvasStates).length) return
-    
-    localStorage.setItem(
-      `book_${bookId}_canvas_states`,
-      JSON.stringify(bookState.canvasStates)
-    )
-  }, [bookId, bookState.canvasStates])
 
   const fetchBookDetail = useCallback(async () => {
     if (!bookId || bookState.details.id === parseInt(bookId)) return
@@ -68,6 +45,7 @@ const useBookReader = (bookId) => {
         ...prev,
         details: data,
         maxPages: data.contents.length,
+        canvasStates: {} // Reset canvas states when loading new book
       }))
 
       return data
@@ -89,23 +67,11 @@ const DrawingCanvas = ({
   className,
   pageNumber,
   onCanvasStateChange,
-  initialState,
-  onClearCanvas 
+  initialState 
 }) => {
   const canvasRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false)
-  const tempStateRef = useRef(null)
-
-  // Clear canvas function
-  const clearCanvas = useCallback(() => {
-    if (!canvasRef.current) return
-    const ctx = canvasRef.current.getContext('2d')
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-    onCanvasStateChange(pageNumber, null) // Clear the stored state
-    if (onClearCanvas) {
-      onClearCanvas()
-    }
-  }, [pageNumber, onCanvasStateChange, onClearCanvas])
+  const tempStateRef = useRef(null) // Store temporary canvas state during resize
 
   // Save canvas state
   const saveCanvasState = useCallback(() => {
@@ -132,19 +98,20 @@ const DrawingCanvas = ({
     img.src = state
   }, [])
 
-  // Handle canvas resize
-  const resizeCanvas = useCallback(() => {
+   // Handle canvas resize
+   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
     const img = document.getElementById("workbook-image")
     if (!img) return
 
-    saveTempState()
+    saveTempState() // Save current state before resize
     
     canvas.width = img.width
     canvas.height = img.height
 
+    // Restore the saved state after resize
     if (tempStateRef.current) {
       restoreCanvas(tempStateRef.current)
     }
@@ -213,7 +180,7 @@ const DrawingCanvas = ({
     }
     setIsDrawing(false)
     canvasRef.current.getContext('2d').closePath()
-    saveCanvasState()
+    saveCanvasState() // Save canvas state when drawing stops
   }, [saveCanvasState])
 
   const preventDefaultTouchAction = useCallback((e) => {
@@ -222,6 +189,15 @@ const DrawingCanvas = ({
       e.stopPropagation()
     }
   }, [tool])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const img = document.getElementById("workbook-image")
+    if (img) {
+      canvas.width = img.width
+      canvas.height = img.height
+    }
+  }, [imageUrl, imageLoaded, isFullscreen])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -280,20 +256,6 @@ export default function Read() {
     }))
   }, [setBookState])
 
-  // Handle clearing the canvas
-  const handleClearCanvas = useCallback(() => {
-    const confirmClear = window.confirm('Are you sure you want to clear the canvas?')
-    if (confirmClear) {
-      setBookState(prev => ({
-        ...prev,
-        canvasStates: {
-          ...prev.canvasStates,
-          [prev.pageNumber]: null
-        }
-      }))
-    }
-  }, [setBookState])
-
   useEffect(() => {
     setUiState(prev => ({ ...prev, imageLoading: true }))
     fetchBookDetail()
@@ -333,7 +295,7 @@ export default function Read() {
   return (
     <main className="p-2 w-full">
       <div className={`${uiState.isFullscreen ? 'absolute top-0 left-0 w-full h-screen z-50 bg-white' : 'max-h-[calc(100vh-100px)] relative'}`}>
-        <img
+      <img
           id="workbook-image"
           className={`${uiState.isFullscreen ? 'h-screen mx-auto' : 'max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg'}`}
           src={bookState.activePage.image_file_url}
@@ -354,7 +316,6 @@ export default function Read() {
           pageNumber={bookState.pageNumber}
           onCanvasStateChange={handleCanvasStateChange}
           initialState={bookState.canvasStates[bookState.pageNumber]}
-          onClearCanvas={handleClearCanvas}
           className={`${uiState.isFullscreen ? 'object-contain absolute top-0 left-0 w-full h-screen' : 'max-h-[calc(100vh-100px)] absolute top-0 left-0 w-full'}`}
         />
 
@@ -368,6 +329,16 @@ export default function Read() {
             </div>
           </div>
         )}
+
+        {/* Tools Menu */}
+        <div className="w-12 absolute z-10 top-2 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm py-1">
+          <button
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
+            onClick={() => setUiState(prev => ({ ...prev, showTools: !prev.showTools }))}
+          >
+            <MenuIcon size={18} />
+          </button>
+        </div>
 
         {uiState.showTools && (
           <div className="w-12 absolute z-10 top-12 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm px-0.5 py-2">
@@ -404,15 +375,8 @@ export default function Read() {
               className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${uiState.tool === TOOLS.ERASER ? "bg-green-300" : ""}`}
               onClick={() => setUiState(prev => ({ ...prev, tool: TOOLS.ERASER }))}
             >
-              <FileIcon size={18} />
+              <Eraser size={18} />
             </button>
-            
-            {/* <button
-              className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${uiState.tool === TOOLS.ERASER ? "bg-green-300" : ""}`}
-              onClick={() => setUiState(prev => ({ ...prev, tool: TOOLS.ERASER }))}
-            >
-              <FileIcon size={18} />
-            </button> */}
           </div>
         )}
 
@@ -443,7 +407,7 @@ export default function Read() {
             <Fullscreen size={18} />
           </button>
         </div>
-        </div>
+      </div>
     </main>
   )
 }
