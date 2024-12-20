@@ -1,236 +1,138 @@
-import ytkiddAPI from "@/apis/ytkidApi"
-import { classNames, FullScreenMode } from "@react-pdf-viewer/core"
-import { ArrowLeft, ArrowRight, Eraser, FileIcon, FullscreenIcon, MenuIcon, PencilIcon } from "lucide-react"
-import Link from "next/link"
-import { useSearchParams } from "next/navigation"
+import { useEffect, useRef, useState, useCallback } from "react"
+import { ArrowLeft, ArrowRight, Eraser, MenuIcon, PencilIcon, Fullscreen } from "lucide-react"
 import { useRouter } from "next/router"
-import { useEffect, useRef, useState } from "react"
+import { useSearchParams } from "next/navigation"
+import ytkiddAPI from "@/apis/ytkidApi"
 
-var tmpBookDetail = {}
-var tmpMaxPageNumber = 0
-export default function Read() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  const [bookDetail, setBookDetail] = useState({})
-  const [activePage, setActivePage] = useState({})
-  const [activePageNumber, setActivePageNumber] = useState(1)
-  const [imageLoading, setImageLoading] = useState(true)
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  // state for drawing
-  const [tool, setTool] = useState('draw')
-  const [color, setColor] = useState('#ff0000')
-  const [brushSize, setBrushSize] = useState(3)
-  const [imageLoaded, setImageLoaded] = useState(new Date)
-  const [showTool, setShowTool] = useState(true)
-
-  useEffect(() => {
-    tmpBookDetail = {}
-    tmpMaxPageNumber = 0
-  }, [])
-
-  useEffect(() => {
-    setImageLoading(true)
-    GetBookDetail(router.query.book_id)
-  }, [router])
-
-  useEffect(() => {
-    if (!tmpBookDetail.id) { return }
-    if (!tmpBookDetail.contents) { return }
-
-    var pageNumber = parseInt(searchParams.get("page"))
-    var pageIndex = pageNumber - 1
-    if (pageIndex <= 0) { pageIndex = 0 }
-    if (pageIndex >= tmpMaxPageNumber) { pageIndex = tmpMaxPageNumber - 1 }
-
-    setActivePageNumber(pageIndex+1)
-
-    if (!tmpBookDetail.contents[pageIndex] || !tmpBookDetail.contents[pageIndex].image_file_url) { return }
-    setActivePage(tmpBookDetail.contents[pageIndex])
-  }, [router, bookDetail])
-
-  async function GetBookDetail(bookID) {
-    if (!bookID) { return }
-
-    if (bookDetail.id === parseInt(bookID)) { return }
-
-    try {
-      const response = await ytkiddAPI.GetBookDetail("", {}, {
-        book_id: bookID
-      })
-      const body = await response.json()
-      if (response.status !== 200) {
-        return
-      }
-
-      tmpBookDetail = body.data
-      tmpMaxPageNumber = tmpBookDetail.contents.length
-      setBookDetail(tmpBookDetail)
-
-      for(const oneContent of tmpBookDetail.contents) {
-        const newImage = new Image();
-        newImage.src = oneContent.image_file_url;
-        window[oneContent.image_file_url] = newImage;
-      }
-
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  function NextPage() {
-    if (activePageNumber >= tmpMaxPageNumber) { return }
-    setImageLoading(true)
-    router.push({
-      pathname: `/workbooks/${router.query.book_id}/read`,
-      search: `?page=${activePageNumber+1}`
-    })
-  }
-
-  function PrevPage() {
-    if (activePageNumber <= 1) { return }
-    setImageLoading(true)
-    router.push({
-      pathname: `/workbooks/${router.query.book_id}/read`,
-      search: `?page=${activePageNumber-1}`
-    })
-  }
-
-  function ToggleFullScreen() {
-    setIsFullscreen(!isFullscreen)
-  }
-
-  function ImageLoaded() {
-    setImageLoading(false)
-    setImageLoaded(new Date)
-  }
-
-  return(
-    <main className="p-2 w-full">
-      <div
-        className={`${isFullscreen ? `
-          absolute top-0 left-0 w-full h-screen z-50 bg-white
-        ` : `
-          max-h-[calc(100vh-100px)] relative
-        `}`}
-      >
-        <img
-          id="workbook-image"
-          className={`${isFullscreen ? `
-            h-screen mx-auto
-          ` : `
-            max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg
-          `}`}
-          src={activePage.image_file_url}
-          onLoad={()=>ImageLoaded()}
-        />
-        <DrawingCanvas
-          isFullscreen={isFullscreen}
-          imageLoaded={imageLoaded}
-          key={activePageNumber}
-          imageUrl={activePage.image_file_url}
-          tool={tool}
-          color={color}
-          brushSize={brushSize}
-          className={`${isFullscreen ? `
-            object-contain absolute top-0 left-0 w-full h-screen
-          ` : `
-            max-h-[calc(100vh-100px)] absolute top-0 left-0 w-full
-          `}`}
-        />
-        <div className={`absolute z-20 top-0 left-0 w-full h-full bg-black bg-opacity-10 backdrop-blur-sm ${imageLoading ? "block" : "hidden"}`}>
-          <div className="mx-auto text-center text-xl flex flex-col h-full justify-center">
-            <div>
-              <span className="bg-white py-1 px-2 rounded-lg">Loading...</span>
-            </div>
-          </div>
-        </div>
-        <div className="w-12 absolute z-10 top-2 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm py-1">
-          <button
-            className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1`}
-            onClick={()=>setShowTool(!showTool)}
-          >
-            <span className="text-black"><MenuIcon size={18} /></span>
-          </button>
-        </div>
-        <div className={`w-12 absolute z-10 top-12 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm px-0.5 py-2 ${showTool ? "block" : "hidden"}`}>
-          <button
-            className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${tool === "draw" ? "bg-green-300" : ""}`}
-            onClick={()=>setTool("draw")}
-          >
-            <span className="text-black"><PencilIcon size={18} /></span>
-          </button>
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="w-8"
-          />
-          <input
-            type="number"
-            id="brushSize"
-            className="border rounded-md w-full text-center"
-            min="1"
-            max="50"
-            value={brushSize}
-            onChange={(e) => setBrushSize(parseInt(e.target.value, 10))}
-          />
-          <button
-            className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${tool === "eraser" ? "bg-green-300" : ""}`}
-            onClick={()=>setTool("eraser")}
-          >
-            <span className="text-black"><Eraser size={18} /></span>
-          </button>
-        </div>
-        <div className="absolute z-10 top-2 right-2 flex gap-1 bg-white bg-opacity-80 rounded-full border border-black shadow-sm px-1 py-0.5">
-          <button
-            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
-            onClick={()=>PrevPage()}
-          >
-            <span className="text-black"><ArrowLeft size={18} /></span>
-          </button>
-          <button
-            className="rounded-lg flex justify-start items-center p-1"
-          >
-            <span className="text-black text-[14px]">{activePageNumber} / {tmpMaxPageNumber}</span>
-          </button>
-          <button
-            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
-            onClick={()=>NextPage()}
-          >
-            <span className="text-black"><ArrowRight size={18} /></span>
-          </button>
-          <button
-            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
-            onClick={()=>ToggleFullScreen()}
-          >
-            <span className="text-black"><FullscreenIcon size={18} /></span>
-          </button>
-        </div>
-      </div>
-    </main>
-  )
+// Constants
+const TOOLS = {
+  DRAW: 'draw',
+  ERASER: 'eraser'
 }
 
-function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brushSize, className, canvasWidth, canvasHeight }) {
-  const drawingCanvasRef = useRef(null)
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
-  const [isDrawing, setIsDrawing] = useState(false)
+const DEFAULT_BRUSH_CONFIG = {
+  size: 3,
+  color: '#ff0000'
+}
 
-  // Coordinate calculation function
-  const getCoordinates = (e) => {
-    const canvas = drawingCanvasRef.current
-    const rect = canvas.getBoundingClientRect()
+// Custom hook for managing book state
+const useBookReader = (bookId) => {
+  const [bookState, setBookState] = useState({
+    details: {},
+    activePage: {},
+    pageNumber: 1,
+    maxPages: 0,
+    canvasStates: {} // Store canvas states for each page
+  })
 
-    let clientX, clientY
-    if (e.touches) {
-      clientX = e.touches[0].clientX
-      clientY = e.touches[0].clientY
-    } else {
-      clientX = e.clientX
-      clientY = e.clientY
+  const fetchBookDetail = useCallback(async () => {
+    if (!bookId || bookState.details.id === parseInt(bookId)) return
+
+    try {
+      const response = await ytkiddAPI.GetBookDetail("", {}, { book_id: bookId })
+      if (response.status !== 200) return
+
+      const { data } = await response.json()
+      
+      // Preload images
+      data.contents.forEach(content => {
+        const img = new Image()
+        img.src = content.image_file_url
+        window[content.image_file_url] = img
+      })
+
+      setBookState(prev => ({
+        ...prev,
+        details: data,
+        maxPages: data.contents.length,
+        canvasStates: {} // Reset canvas states when loading new book
+      }))
+
+      return data
+    } catch (error) {
+      console.error('Error fetching book details:', error)
     }
+  }, [bookId, bookState.details.id])
 
+  return { bookState, setBookState, fetchBookDetail }
+}
+
+// Drawing Canvas Component
+const DrawingCanvas = ({ 
+  isFullscreen, 
+  imageLoaded, 
+  imageUrl, 
+  tool, 
+  brushConfig, 
+  className,
+  pageNumber,
+  onCanvasStateChange,
+  initialState 
+}) => {
+  const canvasRef = useRef(null)
+  const [isDrawing, setIsDrawing] = useState(false)
+  const tempStateRef = useRef(null) // Store temporary canvas state during resize
+
+  // Save canvas state
+  const saveCanvasState = useCallback(() => {
+    if (!canvasRef.current) return
+    const state = canvasRef.current.toDataURL()
+    onCanvasStateChange(pageNumber, state)
+  }, [pageNumber, onCanvasStateChange])
+
+  // Save temporary state before resize
+  const saveTempState = useCallback(() => {
+    if (!canvasRef.current) return
+    tempStateRef.current = canvasRef.current.toDataURL()
+  }, [])
+
+  // Restore canvas state
+  const restoreCanvas = useCallback((state) => {
+    if (!canvasRef.current || !state) return
+    
+    const ctx = canvasRef.current.getContext('2d')
+    const img = new Image()
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height)
+    }
+    img.src = state
+  }, [])
+
+   // Handle canvas resize
+   const resizeCanvas = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const img = document.getElementById("workbook-image")
+    if (!img) return
+
+    saveTempState() // Save current state before resize
+    
+    canvas.width = img.width
+    canvas.height = img.height
+
+    // Restore the saved state after resize
+    if (tempStateRef.current) {
+      restoreCanvas(tempStateRef.current)
+    }
+  }, [saveTempState, restoreCanvas])
+
+  // Load initial state
+  useEffect(() => {
+    if (!canvasRef.current || !initialState) return
+    restoreCanvas(initialState)
+  }, [initialState, restoreCanvas])
+
+  useEffect(() => {
+    resizeCanvas()
+  }, [isFullscreen, imageLoaded, imageUrl, resizeCanvas])
+
+  const getCoordinates = useCallback((e) => {
+    const canvas = canvasRef.current
+    const rect = canvas.getBoundingClientRect()
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY
+    
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
 
@@ -238,118 +140,89 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
       x: (clientX - rect.left) * scaleX,
       y: (clientY - rect.top) * scaleY
     }
-  }
+  }, [])
 
-  // Clear canvas function
-  const clearCanvas = () => {
-    const drawingCtx = drawingCanvasRef.current.getContext('2d')
-    drawingCtx.clearRect(0, 0, drawingCanvasRef.current.width, drawingCanvasRef.current.height)
-  }
-
-  // Drawing functions
-  const startDrawing = (e) => {
+  const initializeDrawing = useCallback((e) => {
     if (!tool) return
-
-    // Prevent default to stop scrolling
     e.preventDefault()
-
-    // Stop propagation to prevent parent element scrolling
     e.stopPropagation()
 
+    const ctx = canvasRef.current.getContext('2d')
     const { x, y } = getCoordinates(e)
-    const drawingCtx = drawingCanvasRef.current.getContext('2d')
 
-    // Configure context based on tool
-    if (tool === 'draw') {
-      drawingCtx.globalCompositeOperation = 'source-over'
-      drawingCtx.strokeStyle = color
-    } else {
-      // Erase mode: use destination-out to erase only drawing layer
-      drawingCtx.globalCompositeOperation = 'destination-out'
-      drawingCtx.strokeStyle = 'rgba(0,0,0,1)'
-    }
-
-    drawingCtx.lineWidth = brushSize
-    drawingCtx.lineCap = 'round'
-    drawingCtx.lineJoin = 'round'
-    drawingCtx.beginPath()
-    drawingCtx.moveTo(x, y)
+    ctx.globalCompositeOperation = tool === TOOLS.DRAW ? 'source-over' : 'destination-out'
+    ctx.strokeStyle = tool === TOOLS.DRAW ? brushConfig.color : 'rgba(0,0,0,1)'
+    ctx.lineWidth = brushConfig.size
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.beginPath()
+    ctx.moveTo(x, y)
 
     setIsDrawing(true)
-  }
+  }, [tool, brushConfig, getCoordinates])
 
-  const draw = (e) => {
+  const draw = useCallback((e) => {
     if (!tool || !isDrawing) return
-
-    // Prevent default to stop scrolling
     e.preventDefault()
-
-    // Stop propagation to prevent parent element scrolling
     e.stopPropagation()
 
+    const ctx = canvasRef.current.getContext('2d')
     const { x, y } = getCoordinates(e)
+    
+    ctx.lineTo(x, y)
+    ctx.stroke()
+  }, [tool, isDrawing, getCoordinates])
 
-    const drawingCtx = drawingCanvasRef.current.getContext('2d')
-
-    drawingCtx.lineTo(x, y)
-    drawingCtx.stroke()
-  }
-
-  const stopDrawing = (e) => {
-    // Prevent default to stop scrolling
+  const stopDrawing = useCallback((e) => {
     if (e) {
       e.preventDefault()
       e.stopPropagation()
     }
-
     setIsDrawing(false)
-    const drawingCtx = drawingCanvasRef.current.getContext('2d')
-    drawingCtx.closePath()
-  }
+    canvasRef.current.getContext('2d').closePath()
+    saveCanvasState() // Save canvas state when drawing stops
+  }, [saveCanvasState])
 
-  // Effect to add passive event listeners and prevent scrolling
-  useEffect(() => {
-    const canvas = drawingCanvasRef.current
-
-    // Passive event listeners for touch events
-    const touchStartOptions = { passive: false }
-    const touchMoveOptions = { passive: false }
-
-    // Prevent default touch behavior
-    const preventScroll = (e) => {
-      if (tool) {
-        e.preventDefault()
-      }
-    }
-
-    canvas.addEventListener('touchstart', preventScroll, touchStartOptions)
-    canvas.addEventListener('touchmove', preventScroll, touchMoveOptions)
-
-    // Cleanup listeners
-    return () => {
-      canvas.removeEventListener('touchstart', preventScroll)
-      canvas.removeEventListener('touchmove', preventScroll)
+  const preventDefaultTouchAction = useCallback((e) => {
+    if (tool) {
+      e.preventDefault()
+      e.stopPropagation()
     }
   }, [tool])
 
   useEffect(() => {
-    const drawingCanvas = drawingCanvasRef.current
-    const imgDimension = getImageDimensionsSync("workbook-image")
-    drawingCanvas.width = imgDimension.width
-    drawingCanvas.height = imgDimension.height
+    const canvas = canvasRef.current
+    const img = document.getElementById("workbook-image")
+    if (img) {
+      canvas.width = img.width
+      canvas.height = img.height
+    }
   }, [imageUrl, imageLoaded, isFullscreen])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const options = { passive: false }
+    
+    canvas.addEventListener('touchstart', preventDefaultTouchAction, options)
+    canvas.addEventListener('touchmove', preventDefaultTouchAction, options)
+
+    return () => {
+      canvas.removeEventListener('touchstart', preventDefaultTouchAction)
+      canvas.removeEventListener('touchmove', preventDefaultTouchAction)
+    }
+  }, [tool, preventDefaultTouchAction])
 
   return (
     <div className={className}>
       <canvas
-        ref={drawingCanvasRef}
+        ref={canvasRef}
         className="mx-auto object-contain"
         style={{ zIndex: 2, cursor: "crosshair" }}
-        onMouseDown={startDrawing}
+        onMouseDown={initializeDrawing}
         onMouseMove={draw}
         onMouseUp={stopDrawing}
         onMouseOut={stopDrawing}
-        onTouchStart={startDrawing}
+        onTouchStart={initializeDrawing}
         onTouchMove={draw}
         onTouchEnd={stopDrawing}
       />
@@ -357,14 +230,184 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
   )
 }
 
-function getImageDimensionsSync(imageId) {
-  const img = document.getElementById(imageId);
+// Main Component
+export default function Read() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { bookState, setBookState, fetchBookDetail } = useBookReader(router.query.book_id)
+  
+  const [uiState, setUiState] = useState({
+    imageLoading: true,
+    isFullscreen: false,
+    showTools: true,
+    imageLoaded: new Date(),
+    tool: TOOLS.DRAW,
+    brushConfig: DEFAULT_BRUSH_CONFIG
+  })
 
-  if (!img) {
-    console.error(`Image with ID "${imageId}" not found.`);
-    return null;
-  }
+  // Handle canvas state changes
+  const handleCanvasStateChange = useCallback((pageNumber, canvasState) => {
+    setBookState(prev => ({
+      ...prev,
+      canvasStates: {
+        ...prev.canvasStates,
+        [pageNumber]: canvasState
+      }
+    }))
+  }, [setBookState])
 
-  // CRUCIAL: This only works if the image is already loaded!
-  return { width: img.width, height: img.height };
+  useEffect(() => {
+    setUiState(prev => ({ ...prev, imageLoading: true }))
+    fetchBookDetail()
+  }, [router, fetchBookDetail])
+
+  useEffect(() => {
+    if (!bookState.details.id || !bookState.details.contents) return
+
+    const pageNumber = Math.max(1, Math.min(
+      parseInt(searchParams.get("page")) || 1,
+      bookState.maxPages
+    ))
+
+    const pageIndex = pageNumber - 1
+    const activePage = bookState.details.contents[pageIndex]
+
+    if (activePage?.image_file_url) {
+      setBookState(prev => ({
+        ...prev,
+        activePage,
+        pageNumber
+      }))
+    }
+  }, [router, bookState.details, searchParams, bookState.maxPages])
+
+  const navigatePage = useCallback((increment) => {
+    const newPage = bookState.pageNumber + increment
+    if (newPage < 1 || newPage > bookState.maxPages) return
+
+    setUiState(prev => ({ ...prev, imageLoading: true }))
+    router.push({
+      pathname: `/workbooks/${router.query.book_id}/read`,
+      search: `?page=${newPage}`
+    })
+  }, [bookState.pageNumber, bookState.maxPages, router])
+
+  return (
+    <main className="p-2 w-full">
+      <div className={`${uiState.isFullscreen ? 'absolute top-0 left-0 w-full h-screen z-50 bg-white' : 'max-h-[calc(100vh-100px)] relative'}`}>
+      <img
+          id="workbook-image"
+          className={`${uiState.isFullscreen ? 'h-screen mx-auto' : 'max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg'}`}
+          src={bookState.activePage.image_file_url}
+          onLoad={() => setUiState(prev => ({ 
+            ...prev, 
+            imageLoading: false,
+            imageLoaded: new Date()
+          }))}
+        />
+        
+        <DrawingCanvas
+          isFullscreen={uiState.isFullscreen}
+          imageLoaded={uiState.imageLoaded}
+          key={`${bookState.pageNumber}-${uiState.imageLoaded}`}
+          imageUrl={bookState.activePage.image_file_url}
+          tool={uiState.tool}
+          brushConfig={uiState.brushConfig}
+          pageNumber={bookState.pageNumber}
+          onCanvasStateChange={handleCanvasStateChange}
+          initialState={bookState.canvasStates[bookState.pageNumber]}
+          className={`${uiState.isFullscreen ? 'object-contain absolute top-0 left-0 w-full h-screen' : 'max-h-[calc(100vh-100px)] absolute top-0 left-0 w-full'}`}
+        />
+
+        {/* Loading Overlay */}
+        {uiState.imageLoading && (
+          <div className="absolute z-20 top-0 left-0 w-full h-full bg-black bg-opacity-10 backdrop-blur-sm">
+            <div className="mx-auto text-center text-xl flex flex-col h-full justify-center">
+              <div>
+                <span className="bg-white py-1 px-2 rounded-lg">Loading...</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tools Menu */}
+        <div className="w-12 absolute z-10 top-2 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm py-1">
+          <button
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
+            onClick={() => setUiState(prev => ({ ...prev, showTools: !prev.showTools }))}
+          >
+            <MenuIcon size={18} />
+          </button>
+        </div>
+
+        {uiState.showTools && (
+          <div className="w-12 absolute z-10 top-12 left-2 flex flex-col items-center gap-2 bg-white bg-opacity-80 rounded-lg border border-black shadow-sm px-0.5 py-2">
+            <button
+              className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${uiState.tool === TOOLS.DRAW ? "bg-green-300" : ""}`}
+              onClick={() => setUiState(prev => ({ ...prev, tool: TOOLS.DRAW }))}
+            >
+              <PencilIcon size={18} />
+            </button>
+            
+            <input
+              type="color"
+              value={uiState.brushConfig.color}
+              onChange={(e) => setUiState(prev => ({ 
+                ...prev, 
+                brushConfig: { ...prev.brushConfig, color: e.target.value }
+              }))}
+              className="w-8"
+            />
+            
+            <input
+              type="number"
+              className="border rounded-md w-full text-center"
+              min="1"
+              max="50"
+              value={uiState.brushConfig.size}
+              onChange={(e) => setUiState(prev => ({ 
+                ...prev, 
+                brushConfig: { ...prev.brushConfig, size: parseInt(e.target.value, 10) }
+              }))}
+            />
+            
+            <button
+              className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${uiState.tool === TOOLS.ERASER ? "bg-green-300" : ""}`}
+              onClick={() => setUiState(prev => ({ ...prev, tool: TOOLS.ERASER }))}
+            >
+              <Eraser size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* Navigation Controls */}
+        <div className="absolute z-10 top-2 right-2 flex gap-1 bg-white bg-opacity-80 rounded-full border border-black shadow-sm px-1 py-0.5">
+          <button
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
+            onClick={() => navigatePage(-1)}
+          >
+            <ArrowLeft size={18} />
+          </button>
+          
+          <span className="text-black text-[14px] p-1">
+            {bookState.pageNumber} / {bookState.maxPages}
+          </span>
+          
+          <button
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
+            onClick={() => navigatePage(1)}
+          >
+            <ArrowRight size={18} />
+          </button>
+          
+          <button
+            className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1"
+            onClick={() => setUiState(prev => ({ ...prev, isFullscreen: !prev.isFullscreen }))}
+          >
+            <Fullscreen size={18} />
+          </button>
+        </div>
+      </div>
+    </main>
+  )
 }
