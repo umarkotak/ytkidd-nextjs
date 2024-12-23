@@ -9,6 +9,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 
 import ytkiddAPI from '@/apis/ytkidApi'
 import Utils from '@/models/Utils'
+import Markdown from 'react-markdown'
 
 const tokenizer = require('sbd')
 
@@ -47,14 +48,14 @@ export default function Home() {
       content: t,
     })
 
-    // var params = {
-    //   "messages": chatHistories
-    // }
     var params = {
-      "messages": [
-        { role: 'user', content: t }
-      ]
+      "messages": chatHistories
     }
+    // var params = {
+    //   "messages": [
+    //     { role: 'user', content: t }
+    //   ]
+    // }
 
     const response = await ytkiddAPI.PostAIChat("", {}, params)
     const body = await response.json()
@@ -62,6 +63,10 @@ export default function Home() {
     var textResult = body.data.content
 
     setMessages([{ role: 'assistant', content: body.data.content }, { role: 'user', content: t }, ...messages])
+    chatHistories.push({
+      role: "assistant",
+      content: body.data.content,
+    })
 
     const container = document.getElementsByClassName('chat-container')
     container.scrollTop = container.scrollHeight
@@ -219,12 +224,14 @@ export default function Home() {
                   message.role === 'user' ? 'text-right text-blue-500' : 'text-left text-black'
                 }`}
               >
-                <p>
+                <p className=''>
                   <span className="font-bold">{message.role}</span>
                 </p>
                 <div className={message.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
-                  <p className='text-xs bg-white p-2 rounded-lg max-w-xs shadow-sm'>
-                    {message.content}
+                  <p className='text-xs bg-white p-2 rounded-lg max-w-xs shadow-sm overflow-auto'>
+                    <Markdown>
+                      {message.content}
+                    </Markdown>
                   </p>
                 </div>
               </div>
