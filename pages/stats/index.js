@@ -30,8 +30,8 @@ export default function Stats() {
     dateList.forEach((oneDate) => {
       var currentDateStat
 
-      if (localStorage.getItem(`YTKIDD:DAILY_VIDEO_STAT:${oneDate}`)) {
-        currentDateStat = JSON.parse(localStorage.getItem(`YTKIDD:DAILY_VIDEO_STAT:${oneDate}`))
+      if (localStorage.getItem(`COOKIEKID:DAILY_VIDEO_STAT:${oneDate}`)) {
+        currentDateStat = JSON.parse(localStorage.getItem(`COOKIEKID:DAILY_VIDEO_STAT:${oneDate}`))
       } else {
         currentDateStat = {
           "total_watch_duration": 0,
@@ -56,7 +56,7 @@ export default function Stats() {
   }
 
   function AddSample() {
-    var key = `YTKIDD:DAILY_VIDEO_STAT:2023-8-22`
+    var key = `COOKIEKID:DAILY_VIDEO_STAT:2023-8-22`
     localStorage.setItem(key, JSON.stringify({
       "total_watch_duration": 1000,
       "view_count": 10,
@@ -80,7 +80,7 @@ export default function Stats() {
   useEffect(() => {
     if (!localStorage) { return }
 
-    var dailyWatchHistoryKey = `YTKIDD:DAILY_VIDEO_HISTORY:${activeDate.name}`
+    var dailyWatchHistoryKey = `COOKIEKID:DAILY_VIDEO_HISTORY:${activeDate.name}`
 
     if (!localStorage.getItem(dailyWatchHistoryKey)) {
       setVideoList([])

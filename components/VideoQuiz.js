@@ -20,7 +20,7 @@ export default function VideoQuiz({
 
   useEffect(() => {
     currenstAnswerCount = 0
-    setAllowDismiss(localStorage.getItem("YTKIDD:QUIZ:ALLOW_DISMISS") !== "off")
+    setAllowDismiss(localStorage.getItem("COOKIEKID:QUIZ:ALLOW_DISMISS") !== "off")
   },[])
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function VideoQuiz({
 
     Utils.SpeakText(activeQuizzes[quizCurrIndex].answers[idx].value)
 
-    if (localStorage.getItem("YTKIDD:QUIZ:SHOW_ANSWER") !== "off") {
+    if (localStorage.getItem("COOKIEKID:QUIZ:SHOW_ANSWER") !== "off") {
       if (`${e.target.textContent}` === `${idx+1}`) {
         e.target.textContent = `${idx+1}.`
       } else if (e.target.textContent.includes(".")) {
@@ -71,7 +71,7 @@ export default function VideoQuiz({
     if (tmpActiveQuiz.question_type === "match_word_and_voice") {
       if (!tmpActiveQuiz.answers[selectedAnswerIdx]) { return }
 
-      if (localStorage.getItem("YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG") !== "off") {
+      if (localStorage.getItem("COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG") !== "off") {
         if (currenstAnswerCount >= MAX_WRONG_COUNT) {
           Utils.SpeakText("KAMU HARUS MENGULANG!")
           setTs(Date.now())

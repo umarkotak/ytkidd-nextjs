@@ -29,19 +29,19 @@ export default function Channels() {
   }
 
   function initializeBlacklistChannelMap() {
-    if (!localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`)) {
-      localStorage.setItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`, '{}')
+    if (!localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`)) {
+      localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, '{}')
     }
-    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`))
+    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`))
     setBlacklistChannelMap(tmpBlacklistChannelMap)
   }
 
   function handleCheckChange(e, channelID) {
-    if (!localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`)) {
-      localStorage.setItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`, '{}')
+    if (!localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`)) {
+      localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, '{}')
     }
 
-    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`))
+    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`))
 
     if (e.target.checked) {
       tmpBlacklistChannelMap[channelID] = false
@@ -49,12 +49,12 @@ export default function Channels() {
       tmpBlacklistChannelMap[channelID] = true
     }
 
-    localStorage.setItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
+    localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
     setBlacklistChannelMap(tmpBlacklistChannelMap)
   }
 
   function checkAll() {
-    localStorage.setItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`, '{}')
+    localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, '{}')
     setBlacklistChannelMap({})
   }
 
@@ -63,7 +63,7 @@ export default function Channels() {
     channelList.forEach((oneChannel) => {
       tmpBlacklistChannelMap[oneChannel.id] = true
     })
-    localStorage.setItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
+    localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
     setBlacklistChannelMap(tmpBlacklistChannelMap)
   }
 

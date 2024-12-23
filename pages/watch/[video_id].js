@@ -93,7 +93,7 @@ export default function Watch() {
 
     GetChannelVideos()
 
-    if (localStorage && localStorage.getItem("YTKIDD:QUIZ:ENABLE") !== "off") {
+    if (localStorage && localStorage.getItem("COOKIEKID:QUIZ:ENABLE") !== "off") {
       setQuizTs(Date.now())
     }
   }, [router])
@@ -143,7 +143,7 @@ export default function Watch() {
 
   useEffect(() => {
     const execCallback = () => {
-      if (localStorage.getItem("YTKIDD:QUIZ:ENABLE") === "off") {
+      if (localStorage.getItem("COOKIEKID:QUIZ:ENABLE") === "off") {
         return
       }
 

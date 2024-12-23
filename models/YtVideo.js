@@ -11,7 +11,7 @@ export default class YtVideo {
     this.channel_id = ytVideo.channel_id
 
     this.shorted_video_title = this.ShortVideoTitle(ytVideo.video_title)
-    this.video_stat_key = `YTKIDD:VIDEO_STAT:${ytVideo.video_id}`
+    this.video_stat_key = `COOKIEKID:VIDEO_STAT:${ytVideo.video_id}`
   }
 
   ShortVideoTitle(title) {
@@ -22,7 +22,7 @@ export default class YtVideo {
   }
 
   IncreaseWatchDuration(videoID, durationSecond) {
-    var key = `YTKIDD:VIDEO_STAT:${videoID}`
+    var key = `COOKIEKID:VIDEO_STAT:${videoID}`
     var videoStat = this.GetLocalVideoStat(key)
     videoStat.total_watch_duration += durationSecond
     localStorage.setItem(key, JSON.stringify(videoStat))
@@ -31,7 +31,7 @@ export default class YtVideo {
   }
 
   IncreaseViewCount(videoID) {
-    var key = `YTKIDD:VIDEO_STAT:${videoID}`
+    var key = `COOKIEKID:VIDEO_STAT:${videoID}`
     var videoStat = this.GetLocalVideoStat(key)
     videoStat.view_count += 1
     localStorage.setItem(key, JSON.stringify(videoStat))
@@ -58,7 +58,7 @@ export default class YtVideo {
   }
 
   IncreaseDailyWatchDuration(currentDate, durationSecond) {
-    var key = `YTKIDD:DAILY_VIDEO_STAT:${currentDate}`
+    var key = `COOKIEKID:DAILY_VIDEO_STAT:${currentDate}`
     var videoStat = this.GetDailyLocalVideoStat(key)
 
     videoStat.total_watch_duration += durationSecond
@@ -66,7 +66,7 @@ export default class YtVideo {
   }
 
   IncreaseDailyViewCount(currentDate) {
-    var key = `YTKIDD:DAILY_VIDEO_STAT:${currentDate}`
+    var key = `COOKIEKID:DAILY_VIDEO_STAT:${currentDate}`
     var videoStat = this.GetDailyLocalVideoStat(key)
 
     videoStat.view_count += 1
@@ -92,7 +92,7 @@ export default class YtVideo {
   }
 
   GetCurrentDailyLocalVideoStat() {
-    var key = `YTKIDD:DAILY_VIDEO_STAT:${this.GetCurrentDate()}`
+    var key = `COOKIEKID:DAILY_VIDEO_STAT:${this.GetCurrentDate()}`
 
     var videoStat = {
       "total_watch_duration": 0,
@@ -119,7 +119,7 @@ export default class YtVideo {
 
     if (typeof(localStorage) === "undefined") { return 0 }
 
-    var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
+    var key = `COOKIEKID:VIDEO_STAT:${selectedVideoID}`
     if (!localStorage.getItem(key)) { return 0 }
     var videoStat = JSON.parse(localStorage.getItem(key))
     return videoStat.view_count
@@ -133,14 +133,14 @@ export default class YtVideo {
 
     if (typeof(localStorage) === "undefined") { return 0 }
 
-    var key = `YTKIDD:VIDEO_STAT:${selectedVideoID}`
+    var key = `COOKIEKID:VIDEO_STAT:${selectedVideoID}`
     if (!localStorage.getItem(key)) { return 0 }
     var videoStat = JSON.parse(localStorage.getItem(key))
     return Math.floor(videoStat.total_watch_duration/60)
   }
 
   PushToDailyWatchHistory(videoID) {
-    var dailyWatchHistoryKey = `YTKIDD:DAILY_VIDEO_HISTORY:${this.GetCurrentDate()}`
+    var dailyWatchHistoryKey = `COOKIEKID:DAILY_VIDEO_HISTORY:${this.GetCurrentDate()}`
 
     var dailyWatchHistories = []
 

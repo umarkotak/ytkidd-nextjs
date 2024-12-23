@@ -139,6 +139,8 @@ export default function Read() {
           ` : `
             max-h-[calc(100vh-100px)] absolute top-0 left-0 w-full
           `}`}
+          bookID={bookDetail.id}
+          pageID={activePage.id}
         />
         <div className={`absolute z-20 top-0 left-0 w-full h-full bg-black bg-opacity-10 backdrop-blur-sm ${imageLoading ? "block" : "hidden"}`}>
           <div className="mx-auto text-center text-xl flex flex-col h-full justify-center">
@@ -220,7 +222,7 @@ export default function Read() {
   )
 }
 
-const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brushSize, className }, ref) {
+const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brushSize, className, bookID, pageID }, ref) {
   const drawingCanvasRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const tempStateRef = useRef(null)
@@ -258,6 +260,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoa
 
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
     drawingCtx.clearRect(0, 0, drawingCanvasRef.current.width, drawingCanvasRef.current.height)
+
+    saveDrawingState(bookID, pageID)
   }
 
   // Drawing functions
@@ -319,6 +323,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoa
     setIsDrawing(false)
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
     drawingCtx.closePath()
+
+    saveDrawingState(bookID, pageID)
   }
 
   // Effect to add passive event listeners and prevent scrolling
@@ -346,6 +352,43 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoa
     }
   }, [tool])
 
+  function loadDrawingState(bookID, pageID) {
+    if (!bookID || !pageID) { return }
+
+    var key = `COOKIEKID:DRAWING_STATE:BOOK:${bookID}:PAGE:${pageID}`
+    try {
+      var tempCanvasDrawingUrl = localStorage.getItem(key)
+
+      if (!tempCanvasDrawingUrl || tempCanvasDrawingUrl === "") { return }
+
+      const drawingCanvas = drawingCanvasRef.current
+
+      const ctx = drawingCanvas.getContext('2d')
+      const img = new Image()
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, drawingCanvas.width, drawingCanvas.height)
+      }
+      img.src = tempCanvasDrawingUrl
+    } catch (e) {
+
+    }
+  }
+
+  function saveDrawingState(bookID, pageID) {
+    if (!bookID || !pageID) { return }
+
+    var key = `COOKIEKID:DRAWING_STATE:BOOK:${bookID}:PAGE:${pageID}`
+    try {
+      const drawingCanvas = drawingCanvasRef.current
+      if (!drawingCanvas) { return }
+
+      console.log("DRAWING SAVED")
+      localStorage.setItem(key, drawingCanvas.toDataURL())
+    } catch(e) {
+
+    }
+  }
+
   useEffect(() => {
     const drawingCanvas = drawingCanvasRef.current
     const imgDimension = getImageDimensionsSync("workbook-image")
@@ -355,14 +398,24 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoa
     drawingCanvas.width = imgDimension.width
     drawingCanvas.height = imgDimension.height
 
-    console.log("CANVAS SIZE",drawingCanvas.width, drawingCanvas.height)
+    console.log("CANVAS SIZE", drawingCanvas.width, drawingCanvas.height, bookID, pageID)
     const ctx = drawingCanvas.getContext('2d')
     const img = new Image()
     img.onload = () => {
       ctx.drawImage(img, 0, 0, drawingCanvas.width, drawingCanvas.height)
     }
     img.src = tempCanvasDrawingUrl
-  }, [imageUrl, imageLoaded, isFullscreen])
+  }, [isFullscreen])
+
+  useEffect(() => {
+    const drawingCanvas = drawingCanvasRef.current
+    const imgDimension = getImageDimensionsSync("workbook-image")
+
+    drawingCanvas.width = imgDimension.width
+    drawingCanvas.height = imgDimension.height
+
+    loadDrawingState(bookID, pageID)
+  }, [imageUrl, imageLoaded])
 
   return (
     <div className={className}>

@@ -29,8 +29,8 @@ class YtkiddAPI {
   // ACTUAL
 
   async GetVideos(authToken, h, params) {
-    if (localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`)) {
-      var blacklistMap = JSON.parse(localStorage.getItem(`YTKIDD:BLACKLIST_CHANNEL_MAP`))
+    if (localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`)) {
+      var blacklistMap = JSON.parse(localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`))
       params.exclude_channel_ids = Object.keys(blacklistMap).filter((k)=>blacklistMap[k]).map((k)=>`${k}`).join(",")
     }
 

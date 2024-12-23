@@ -14,10 +14,10 @@ export default function Setting() {
     setVal2(Utils.GetRandomNumber(1, 10))
 
     setYtkiddConf({
-      "YTKIDD:QUIZ:ENABLE": localStorage.getItem("YTKIDD:QUIZ:ENABLE") || "on",
-      "YTKIDD:QUIZ:SHOW_ANSWER": localStorage.getItem("YTKIDD:QUIZ:SHOW_ANSWER") || "on",
-      "YTKIDD:QUIZ:ALLOW_DISMISS": localStorage.getItem("YTKIDD:QUIZ:ALLOW_DISMISS") || "on",
-      "YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG": localStorage.getItem("YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG") || "on",
+      "COOKIEKID:QUIZ:ENABLE": localStorage.getItem("COOKIEKID:QUIZ:ENABLE") || "on",
+      "COOKIEKID:QUIZ:SHOW_ANSWER": localStorage.getItem("COOKIEKID:QUIZ:SHOW_ANSWER") || "on",
+      "COOKIEKID:QUIZ:ALLOW_DISMISS": localStorage.getItem("COOKIEKID:QUIZ:ALLOW_DISMISS") || "on",
+      "COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG": localStorage.getItem("COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG") || "on",
     })
   }, [])
 
@@ -49,17 +49,17 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {ykiddConf["YTKIDD:QUIZ:ENABLE"]}
+              Status: {ykiddConf["COOKIEKID:QUIZ:ENABLE"]}
             </button>
 
             <button
               className="p-2 rounded border bg-green-300 hover:bg-green-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:ENABLE", "on"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:ENABLE", "on"); window.location.reload()}}
             >On</button>
 
             <button
               className="p-2 rounded border bg-red-300 hover:bg-red-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:ENABLE", "off"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:ENABLE", "off"); window.location.reload()}}
             >Off</button>
           </div>
         </div>
@@ -69,17 +69,17 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {ykiddConf["YTKIDD:QUIZ:SHOW_ANSWER"]}
+              Status: {ykiddConf["COOKIEKID:QUIZ:SHOW_ANSWER"]}
             </button>
 
             <button
               className="p-2 rounded border bg-green-300 hover:bg-green-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:SHOW_ANSWER", "on"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:SHOW_ANSWER", "on"); window.location.reload()}}
             >On</button>
 
             <button
               className="p-2 rounded border bg-red-300 hover:bg-red-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:SHOW_ANSWER", "off"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:SHOW_ANSWER", "off"); window.location.reload()}}
             >Off</button>
           </div>
         </div>
@@ -89,17 +89,17 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {ykiddConf["YTKIDD:QUIZ:ALLOW_DISMISS"]}
+              Status: {ykiddConf["COOKIEKID:QUIZ:ALLOW_DISMISS"]}
             </button>
 
             <button
               className="p-2 rounded border bg-green-300 hover:bg-green-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:ALLOW_DISMISS", "on"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:ALLOW_DISMISS", "on"); window.location.reload()}}
             >On</button>
 
             <button
               className="p-2 rounded border bg-red-300 hover:bg-red-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:ALLOW_DISMISS", "off"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:ALLOW_DISMISS", "off"); window.location.reload()}}
             >Off</button>
           </div>
         </div>
@@ -109,17 +109,17 @@ export default function Setting() {
 
           <div className="flex gap-2">
             <button className="p-2 rounded border">
-              Status: {ykiddConf["YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG"]}
+              Status: {ykiddConf["COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG"]}
             </button>
 
             <button
               className="p-2 rounded border bg-green-300 hover:bg-green-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG", "on"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG", "on"); window.location.reload()}}
             >On</button>
 
             <button
               className="p-2 rounded border bg-red-300 hover:bg-red-400"
-              onClick={()=>{localStorage.setItem("YTKIDD:QUIZ:CHANGE_QUESTION_ON_WRONG", "off"); window.location.reload()}}
+              onClick={()=>{localStorage.setItem("COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG", "off"); window.location.reload()}}
             >Off</button>
           </div>
         </div>
