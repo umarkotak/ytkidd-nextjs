@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, Eraser, FileIcon, FullscreenIcon, MenuIcon, Penc
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/router"
-import { useEffect, useRef, useState } from "react"
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
 
 var tmpBookDetail = {}
 var tmpMaxPageNumber = 0
@@ -12,6 +12,7 @@ export default function Read() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  const drawingCanvas = useRef(null)
   const [bookDetail, setBookDetail] = useState({})
   const [activePage, setActivePage] = useState({})
   const [activePageNumber, setActivePageNumber] = useState(1)
@@ -125,6 +126,7 @@ export default function Read() {
           onLoad={()=>ImageLoaded()}
         />
         <DrawingCanvas
+          ref={drawingCanvas}
           isFullscreen={isFullscreen}
           imageLoaded={imageLoaded}
           key={activePageNumber}
@@ -181,6 +183,12 @@ export default function Read() {
           >
             <span className="text-black"><Eraser size={18} /></span>
           </button>
+          <button
+            className={`rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 ${tool === "eraser" ? "bg-green-300" : ""}`}
+            onClick={()=>{ drawingCanvas.current.clearCanvas() }}
+          >
+            <span className="text-black"><FileIcon size={18} /></span>
+          </button>
         </div>
         <div className="absolute z-10 top-2 right-2 flex gap-1 bg-white bg-opacity-80 rounded-full border border-black shadow-sm px-1 py-0.5">
           <button
@@ -212,10 +220,10 @@ export default function Read() {
   )
 }
 
-function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brushSize, className, canvasWidth, canvasHeight }) {
+const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brushSize, className }, ref) {
   const drawingCanvasRef = useRef(null)
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
   const [isDrawing, setIsDrawing] = useState(false)
+  const tempStateRef = useRef(null)
 
   // Coordinate calculation function
   const getCoordinates = (e) => {
@@ -240,8 +248,14 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
     }
   }
 
+  useImperativeHandle(ref, () => ({
+    clearCanvas: clearCanvas,
+  }))
+
   // Clear canvas function
   const clearCanvas = () => {
+    if (!confirm("Are you sure want to clear canvas?")) { return }
+
     const drawingCtx = drawingCanvasRef.current.getContext('2d')
     drawingCtx.clearRect(0, 0, drawingCanvasRef.current.width, drawingCanvasRef.current.height)
   }
@@ -335,8 +349,18 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
   useEffect(() => {
     const drawingCanvas = drawingCanvasRef.current
     const imgDimension = getImageDimensionsSync("workbook-image")
+
+    const tempCanvasDrawingUrl = drawingCanvas.toDataURL()
+
     drawingCanvas.width = imgDimension.width
     drawingCanvas.height = imgDimension.height
+
+    const ctx = drawingCanvas.getContext('2d')
+    const img = new Image()
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, drawingCanvas.width, drawingCanvas.height)
+    }
+    img.src = tempCanvasDrawingUrl
   }, [imageUrl, imageLoaded, isFullscreen])
 
   return (
@@ -355,7 +379,7 @@ function DrawingCanvas({ isFullscreen, imageLoaded, imageUrl, tool, color, brush
       />
     </div>
   )
-}
+})
 
 function getImageDimensionsSync(imageId) {
   const img = document.getElementById(imageId);
