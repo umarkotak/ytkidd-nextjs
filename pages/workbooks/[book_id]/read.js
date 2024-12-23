@@ -110,15 +110,15 @@ export default function Read() {
     <main className="p-2 w-full">
       <div
         className={`${isFullscreen ? `
-          absolute top-0 left-0 w-full h-screen z-50 bg-white
+          absolute top-0 left-0 w-full z-50 bg-white object-contain max-h-screen
         ` : `
           max-h-[calc(100vh-100px)] relative
         `}`}
       >
         <img
           id="workbook-image"
-          className={`${isFullscreen ? `
-            h-screen mx-auto
+          className={`border rounded ${isFullscreen ? `
+            max-h-screen mx-auto object-contain
           ` : `
             max-h-[calc(100vh-100px)] object-contain mx-auto rounded-lg
           `}`}
@@ -355,6 +355,7 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ isFullscreen, imageLoa
     drawingCanvas.width = imgDimension.width
     drawingCanvas.height = imgDimension.height
 
+    console.log("CANVAS SIZE",drawingCanvas.width, drawingCanvas.height)
     const ctx = drawingCanvas.getContext('2d')
     const img = new Image()
     img.onload = () => {
