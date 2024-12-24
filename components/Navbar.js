@@ -67,7 +67,7 @@ export default function Navbar() {
       </div>
 
       <div className='flex gap-2 items-center'>
-        <Link href="/login" className='btn btn-sm'><LogInIcon size={14} /> login</Link>
+        {/* <Link href="/login" className='btn btn-sm'><LogInIcon size={14} /> login</Link> */}
         <img src="https://placehold.co/200" alt="Avatar" className="h-8 w-8 rounded-full" />
       </div>
     </nav>
