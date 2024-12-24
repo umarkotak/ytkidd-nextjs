@@ -68,10 +68,18 @@ export default function Read() {
       tmpMaxPageNumber = tmpBookDetail.contents.length
       setBookDetail(tmpBookDetail)
 
+      const preloadImage = async (imageUrl) => {
+        const image = new Image();
+        image.src = imageUrl;
+        await new Promise((resolve, reject) => {
+          image.onload = resolve;
+          image.onerror = reject;
+        });
+      };
+
       for(const oneContent of tmpBookDetail.contents) {
-        const newImage = new Image();
-        newImage.src = oneContent.image_file_url;
-        window[oneContent.image_file_url] = newImage;
+        await preloadImage(oneContent.image_file_url);
+        console.log("PRELOADED", oneContent.image_file_url)
       }
 
     } catch (e) {
