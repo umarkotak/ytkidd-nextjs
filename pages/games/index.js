@@ -24,10 +24,19 @@ export default function Home() {
         <Link href="/games/snake" className='hover:scale-105 duration-300'>
           <div className='flex flex-col gap-2 border shadow-sm p-2 rounded-lg'>
             <img
-              src="https://ytkidd-api-m4.cloudflare-avatar-id-1.site/comfy_ui_gallery/ComfyUI_00026_.png"
+              src="https://ytkidd-api-m4.cloudflare-avatar-id-1.site/comfy_ui_gallery/ComfyUI_00027_.png"
               className='w-full rounded-lg shadow-sm'
             />
             <h1 className='text-2xl flex gap-1 items-center justify-center'><Worm size={24} /> Snake</h1>
+          </div>
+        </Link>
+        <Link href="/games/pong" className='hover:scale-105 duration-300'>
+          <div className='flex flex-col gap-2 border shadow-sm p-2 rounded-lg'>
+            <img
+              src="https://ytkidd-api-m4.cloudflare-avatar-id-1.site/comfy_ui_gallery/ComfyUI_00027_.png"
+              className='w-full rounded-lg shadow-sm'
+            />
+            <h1 className='text-2xl flex gap-1 items-center justify-center'><Worm size={24} /> Pong</h1>
           </div>
         </Link>
       </div>
