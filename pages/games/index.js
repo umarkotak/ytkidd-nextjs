@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { BookOpen, BotMessageSquare, BrickWall, MessageCircleQuestion,  } from 'lucide-react'
+import { BookOpen, BotMessageSquare, BrickWall, MessageCircleQuestion, Worm,  } from 'lucide-react'
 
 import ytkiddAPI from '@/apis/ytkidApi'
 import Utils from '@/models/Utils'
@@ -19,6 +19,15 @@ export default function Home() {
               className='w-full rounded-lg shadow-sm'
             />
             <h1 className='text-2xl flex gap-1 items-center justify-center'><BrickWall size={24} /> Maze</h1>
+          </div>
+        </Link>
+        <Link href="/games/snake" className='hover:scale-105 duration-300'>
+          <div className='flex flex-col gap-2 border shadow-sm p-2 rounded-lg'>
+            <img
+              src="https://ytkidd-api-m4.cloudflare-avatar-id-1.site/comfy_ui_gallery/ComfyUI_00026_.png"
+              className='w-full rounded-lg shadow-sm'
+            />
+            <h1 className='text-2xl flex gap-1 items-center justify-center'><Worm size={24} /> Snake</h1>
           </div>
         </Link>
       </div>
